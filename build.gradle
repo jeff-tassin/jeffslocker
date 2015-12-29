@@ -1,0 +1,26 @@
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+// The shortcut form for declaring external dependencies looks like “group:name:version”.
+dependencies {
+    compile 'junit:junit:4.12', 'org.json:json:20151123', 'commons-codec:commons-codec:1.10', 'org.apache.commons:commons-lang3:3.4'
+}
+
+
+task buildJar(type: Jar) {
+    manifest {
+        attributes 'Locker': 'Locker Jar',  
+        	'Implementation-Version': 1.0,
+        	'Main-Class': 'com.jeta.locker.main.LockerMain'
+    }
+    baseName = project.name 
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}

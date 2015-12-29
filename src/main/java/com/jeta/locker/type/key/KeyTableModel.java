@@ -14,7 +14,7 @@ import com.jeta.locker.model.AbstractWorksheetModel;
 public class KeyTableModel extends AbstractWorksheetModel {
 	
     private static String[] columnNames = {"Service Name",
-    								"File Name",
+    								"Description",
                                     "Public Key",
                                     "Private Key"
                                     };
@@ -33,7 +33,7 @@ public class KeyTableModel extends AbstractWorksheetModel {
         case 0:
         	return data.optString( SERVICE );
         case 1:
-        	return data.optString( FILE_NAME );
+        	return data.optString( DESCRIPTION );
         case 2:
         	return data.optString( PUBLIC_KEY );
         case 3:
@@ -54,7 +54,7 @@ public class KeyTableModel extends AbstractWorksheetModel {
         	data.put( SERVICE, sval );
         	break;
         case 1:
-        	data.put( FILE_NAME, sval );
+        	data.put( DESCRIPTION, sval );
         	break;
         case 2:
         	data.put( PUBLIC_KEY, sval );

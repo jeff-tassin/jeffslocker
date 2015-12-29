@@ -39,6 +39,7 @@ public class KeyView extends JPanel {
 	private JTable m_table;
 	private JButton m_addBtn;
 	private JButton m_deleteBtn;
+	private JButton m_editBtn;
  
     public KeyView( KeyTableModel model ) {
         super(new BorderLayout());
@@ -152,6 +153,19 @@ public class KeyView extends JPanel {
 				}
             });
             m_deleteBtn.setEnabled(false);
+            
+
+            m_editBtn = new JButton("Edit"); 
+            panel.add( m_editBtn );
+            m_editBtn.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					KeyDialog dlg = new KeyDialog(null);
+				}
+            });
+            m_editBtn.setEnabled(false);
+            
+
             return panel;
         } catch (Exception e ) {
             e.printStackTrace();
@@ -162,6 +176,7 @@ public class KeyView extends JPanel {
     
     public void uiChanged() {
         m_deleteBtn.setEnabled( m_table.getSelectedRow() >= 0 );
+        m_editBtn.setEnabled( m_table.getSelectedRow() >= 0 );
     }
  
    

@@ -11,7 +11,6 @@ public class LockerProperties {
 
 	public static final String DATA_DIRECTORY = "data.directory";
 	public static final String API_KEY = "api.key";
-	public static final String PASSWORD = "password";
 	
 	private static Properties m_properties = null;
 	
