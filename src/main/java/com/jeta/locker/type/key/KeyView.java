@@ -1,7 +1,9 @@
 package com.jeta.locker.type.key;
 
-import java.awt.BorderLayout; 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
@@ -28,12 +30,15 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import org.json.JSONObject;
 
+import com.jeta.forms.components.panel.FormPanel;
 import com.jeta.locker.common.LockerConstants;
 import com.jeta.locker.common.LockerUtils;
 import com.jeta.locker.main.Worksheet;
+import com.jeta.open.gui.framework.JETADialog;
+import com.jeta.open.gui.framework.JETAPanel;
 
 
-public class KeyView extends JPanel {
+public class KeyView extends JETAPanel {
  
 	private KeyTableModel m_model;
 	private JTable m_table;
@@ -52,12 +57,13 @@ public class KeyView extends JPanel {
         m_table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         m_table.setCellSelectionEnabled(true);
         m_table.setRowHeight(26); 
-        
+        m_table.setGridColor( new Color(225,225,255) );
+        m_table.setName(KeyConstants.ID_KEY_TABLE);
         
         ListSelectionModel selectionModel = m_table.getSelectionModel();
         selectionModel.addListSelectionListener(new ListSelectionListener() {
         	public void valueChanged(ListSelectionEvent e) {
-        		uiChanged();
+        		//uiChanged();
         	}
         });
      
@@ -90,6 +96,7 @@ public class KeyView extends JPanel {
         //Add the scroll pane to this panel.
         add(createToolbar(), BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
+        setController( new KeyController(this));
     }
     
 
@@ -118,8 +125,13 @@ public class KeyView extends JPanel {
     public Worksheet getWorksheet() {
     	return m_model.getWorksheet();
     }
+    
+    private JETAPanel createToolbar() {
+    	FormPanel panel = new FormPanel( "keyToolbar.jfrm" );	
+    	return panel;
+    }
    
-    private JPanel createToolbar() {
+    private JPanel createToolbar2() {
         try {
           JPanel panel = new JPanel();
 
@@ -160,7 +172,13 @@ public class KeyView extends JPanel {
             m_editBtn.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					KeyDialog dlg = new KeyDialog(null);
+					//KeyDialog dlg = new KeyDialog(null);
+					FormPanel panel = new FormPanel( "key.jfrm" );
+					JETADialog dlg = new JETADialog( (Dialog)null, true );
+					dlg.setPrimaryPanel( panel );
+					dlg.setBounds(0, 0, 450,  500);
+					dlg.setTitle("Edit Key");
+					dlg.showCenter();
 				}
             });
             m_editBtn.setEnabled(false);
@@ -175,8 +193,8 @@ public class KeyView extends JPanel {
     }
     
     public void uiChanged() {
-        m_deleteBtn.setEnabled( m_table.getSelectedRow() >= 0 );
-        m_editBtn.setEnabled( m_table.getSelectedRow() >= 0 );
+     //   m_deleteBtn.setEnabled( m_table.getSelectedRow() >= 0 );
+     //   m_editBtn.setEnabled( m_table.getSelectedRow() >= 0 );
     }
  
    

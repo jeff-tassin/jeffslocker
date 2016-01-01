@@ -1,6 +1,7 @@
 package com.jeta.locker.type.password;
 
-import java.awt.BorderLayout; 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -54,7 +55,8 @@ public class PasswordView extends JPanel {
         m_table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         m_table.setCellSelectionEnabled(true);
         m_table.setRowHeight(26);
-        
+        m_table.setGridColor( new Color(225,225,225) );
+
         
         ListSelectionModel selectionModel = m_table.getSelectionModel();
         selectionModel.addListSelectionListener(new ListSelectionListener() {
@@ -71,6 +73,7 @@ public class PasswordView extends JPanel {
         
         
         DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer() {
+        	Color evenColor = new Color(245,245,245);
             Border padding = BorderFactory.createEmptyBorder(0, 5, 0, 5);
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
@@ -78,9 +81,15 @@ public class PasswordView extends JPanel {
             	
             	if ( m_model.isPasswordColumn(column) && value != null ) {
             		value = m_showPasswords ? value : "*******************";
-            	}
+            	}  
+            	if ( row % 2 == 0 ) {
+                	this.setBackground(Color.white);
+                } else {
+                	this.setBackground(evenColor);
+                }
                 super.getTableCellRendererComponent(table, value, isSelected, hasFocus,row, column);
-                setBorder(BorderFactory.createCompoundBorder(getBorder(), padding));
+               // setBorder(BorderFactory.createCompoundBorder(getBorder(), padding));
+              
                 return this;
             }
         };

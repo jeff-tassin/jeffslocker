@@ -96,7 +96,7 @@ public class AES {
 		
 		// Decrypt the message
 		Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        final IvParameterSpec ivSpec = new IvParameterSpec(IV_BYTES.getBytes("UTF-8"));
+        final IvParameterSpec ivSpec = new IvParameterSpec( IV_BYTES.getBytes("UTF-8"));
 		cipher.init(Cipher.DECRYPT_MODE, secret, ivSpec);
 		
 		

@@ -9,6 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.UIManager;
 
 import com.jeta.locker.common.LockerException;
 import com.jeta.locker.common.StringUtils;
@@ -19,11 +20,23 @@ public class LockerMain {
 	private LockerModel m_locker;
 	
 	public LockerMain() throws LockerException {
+		/**
+		 * Fix Mac slow rendering
+		 */
+		System.setProperty("swing.volatileImageBufferEnabled", "false" );
 		try {
 			LockerProperties.initialize();
 		} catch( Exception e ) {
 			JOptionPane.showMessageDialog(null,  "Unable to load properties file:\n" + LockerProperties.getConfigFile() );
 			System.exit(0);
+		}
+		
+		try {
+			System.setProperty("apple.laf.useScreenMenuBar", "true");
+			System.setProperty("com.apple.mrj.application.apple.menu.about.name", "WikiTeX");
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch( Exception e) {
+			// ignore
 		}
 
 		m_locker = new LockerModel( getPassword() );
