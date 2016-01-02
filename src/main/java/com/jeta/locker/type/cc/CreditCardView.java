@@ -28,23 +28,28 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import org.json.JSONObject;
 
+import com.jeta.forms.components.panel.FormPanel;
 import com.jeta.locker.common.LockerConstants;
 import com.jeta.locker.common.LockerUtils;
 import com.jeta.locker.main.Worksheet;
+import com.jeta.locker.type.password.PasswordConstants;
+import com.jeta.open.gui.framework.JETAPanel;
 
 
-public class CreditCardView extends JPanel {
+public class CreditCardView extends JETAPanel {
  
 	private CreditCardTableModel m_model;
 	private JTable m_table;
-	private JButton m_addBtn;
-	private JButton m_deleteBtn;
+	//private JButton m_addBtn;
+	//private JButton m_deleteBtn;
  
     public CreditCardView( CreditCardTableModel model ) {
         super(new BorderLayout());
  
+        add( new FormPanel( "creditCardAccounts.jfrm"), BorderLayout.CENTER );
+        m_table = getTable( PasswordConstants.ID_ACCOUNTS_TABLE );
         m_model = model;
-        m_table = new JTable(model);
+       m_table.setModel(model);
         m_table.setPreferredScrollableViewportSize(new Dimension(500, 70));
         m_table.setFillsViewportHeight(true);
         m_table.setAutoCreateRowSorter(true);
@@ -56,7 +61,7 @@ public class CreditCardView extends JPanel {
         ListSelectionModel selectionModel = m_table.getSelectionModel();
         selectionModel.addListSelectionListener(new ListSelectionListener() {
         	public void valueChanged(ListSelectionEvent e) {
-        		uiChanged();
+        		//uiChanged();
         	}
         });
      
@@ -82,13 +87,13 @@ public class CreditCardView extends JPanel {
         m_table.setDefaultRenderer( String.class, cellRenderer);
 
         //Create the scroll pane and add the table to it.
-        JScrollPane scrollPane = new JScrollPane(m_table);
+        //JScrollPane scrollPane = new JScrollPane(m_table);
  
         //Set up renderer and editor for the Favorite Color column.
  
         //Add the scroll pane to this panel.
-        add(createToolbar(), BorderLayout.NORTH);
-        add(scrollPane, BorderLayout.CENTER);
+       // add(createToolbar(), BorderLayout.NORTH);
+       // add(scrollPane, BorderLayout.CENTER);
     }
     
 
@@ -118,18 +123,18 @@ public class CreditCardView extends JPanel {
     	return m_model.getWorksheet();
     }
    
+    /*
     private JPanel createToolbar() {
         try {
           JPanel panel = new JPanel();
 
             panel.add( new JLabel("Accounts:"));
-            m_addBtn = new JButton("Add"); // + (plus)
+            m_addBtn = new JButton("Add"); 
             panel.add( m_addBtn );
             m_addBtn.addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					// TODO Auto-generated method stub
 					JSONObject acct = new JSONObject();
 					acct.put( LockerConstants.ID, LockerUtils.generateId() );
 					m_model.addRow( acct );
@@ -142,8 +147,6 @@ public class CreditCardView extends JPanel {
             m_deleteBtn.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					
-					// TODO Auto-generated method stub
 					int result = JOptionPane.showConfirmDialog(null,"Delete selected account?", "Confirm", JOptionPane.YES_NO_OPTION);
 					if ( result == JOptionPane.YES_OPTION ) {
 						int row = m_table.convertRowIndexToModel( m_table.getSelectedRow() );
@@ -160,9 +163,10 @@ public class CreditCardView extends JPanel {
     	
     }
     
+    
     public void uiChanged() {
         m_deleteBtn.setEnabled( m_table.getSelectedRow() >= 0 );
     }
- 
+ */
    
 }

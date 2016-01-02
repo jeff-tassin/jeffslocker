@@ -31,12 +31,14 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import org.json.JSONObject;
 
+import com.jeta.forms.components.panel.FormPanel;
 import com.jeta.locker.common.LockerConstants;
 import com.jeta.locker.common.LockerUtils;
 import com.jeta.locker.main.Worksheet;
+import com.jeta.open.gui.framework.JETAPanel;
 
 
-public class PasswordView extends JPanel {
+public class PasswordView extends JETAPanel {
  
 	private PasswordTableModel m_model;
 	private JTable m_table;
@@ -47,8 +49,11 @@ public class PasswordView extends JPanel {
     public PasswordView( PasswordTableModel model ) {
         super(new BorderLayout());
  
+        add( new FormPanel("passwordAccounts.jfrm"));
+        m_table = getTable(PasswordConstants.ID_ACCOUNTS_TABLE);
+        m_table.setModel(model);
         m_model = model;
-        m_table = new JTable(model);
+       // m_table = new JTable(model);
         m_table.setPreferredScrollableViewportSize(new Dimension(500, 70));
         m_table.setFillsViewportHeight(true);
         m_table.setAutoCreateRowSorter(true);
@@ -56,15 +61,8 @@ public class PasswordView extends JPanel {
         m_table.setCellSelectionEnabled(true);
         m_table.setRowHeight(26);
         m_table.setGridColor( new Color(225,225,225) );
-
-        
-        ListSelectionModel selectionModel = m_table.getSelectionModel();
-        selectionModel.addListSelectionListener(new ListSelectionListener() {
-        	public void valueChanged(ListSelectionEvent e) {
-        		uiChanged();
-        	}
-        });
-     
+       // m_table.setName(PasswordConstants.ID_ACCOUNTS_TABLE);
+      
         m_table.setComponentPopupMenu( createContextMenu() );
         Font font = m_table.getFont();
         if (font.getSize() < 14 ) {
@@ -97,13 +95,16 @@ public class PasswordView extends JPanel {
         m_table.setDefaultRenderer( String.class, cellRenderer);
 
         //Create the scroll pane and add the table to it.
-        JScrollPane scrollPane = new JScrollPane(m_table);
+       // JScrollPane scrollPane = new JScrollPane(m_table);
  
         //Set up renderer and editor for the Favorite Color column.
  
         //Add the scroll pane to this panel.
-        add(createToolbar(), BorderLayout.NORTH);
-        add(scrollPane, BorderLayout.CENTER);
+       // add(createToolbar(), BorderLayout.NORTH);
+       // add(scrollPane, BorderLayout.CENTER);
+        setUIDirector( new PasswordUIDirector(this));
+        setController( new PasswordController(this));
+    
     }
     
     public void showPasswords( boolean show ) {
@@ -137,7 +138,10 @@ public class PasswordView extends JPanel {
     	return m_model.getWorksheet();
     }
    
-    private JPanel createToolbar() {
+    private JETAPanel createToolbar() {
+    	return new FormPanel("passwordsToolbar.jfrm");
+    }
+    private JPanel createToolbar2() {
     	try {
     		JPanel panel = new JPanel();
     		panel.setLayout( new FlowLayout(FlowLayout.LEFT));
@@ -187,10 +191,6 @@ public class PasswordView extends JPanel {
     	return new JPanel();
 
     }
-    
-    public void uiChanged() {
-        m_deleteBtn.setEnabled( m_table.getSelectedRow() >= 0 );
-    }
- 
+
    
 }

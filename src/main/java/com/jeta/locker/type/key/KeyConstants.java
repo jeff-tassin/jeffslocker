@@ -3,7 +3,7 @@ package com.jeta.locker.type.key;
 public class KeyConstants {
 	/** key view 
 	 */
-	public static final String ID_KEY_TABLE = "key.table";
+	public static final String ID_KEY_TABLE = "accounts.table";
 	
 		// Generation Start
 	public static final String ID_PUBLIC_KEY = "public.key";  //javax.swing.JTextArea
