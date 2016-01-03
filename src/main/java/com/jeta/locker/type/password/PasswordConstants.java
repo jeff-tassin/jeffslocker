@@ -8,7 +8,5 @@ public class PasswordConstants {
 	public static final String ID_DELETE_ACCOUNT = "delete.account";  //javax.swing.JButton
 	public static final String ID_GENERATE_PASSWORD = "generate.password";  //javax.swing.JButton
 	// Generation End
-	
-	
 
 }
