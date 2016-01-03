@@ -57,6 +57,10 @@ public class Worksheet {
 		m_accounts.add(acct);
 		setModified(true);
 	}
+	
+	public JSONObject getAccount(int index) {
+		return m_accounts.get(index);
+	}
 
 	public void removeEntry(String id) {
 		Iterator<JSONObject> iter = m_accounts.iterator();
@@ -103,6 +107,7 @@ public class Worksheet {
 		}
 		return sheet;
 	}
+
 
 }
 

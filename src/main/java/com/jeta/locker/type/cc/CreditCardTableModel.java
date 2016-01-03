@@ -6,6 +6,7 @@ import static com.jeta.locker.common.LockerConstants.*;
 
 import org.json.JSONObject;
 
+import com.jeta.locker.common.StringUtils;
 import com.jeta.locker.main.Worksheet;
 import com.jeta.locker.model.AbstractWorksheetModel;
 
@@ -21,6 +22,20 @@ public class CreditCardTableModel extends AbstractWorksheetModel {
     public CreditCardTableModel( Worksheet worksheet ) {
     	super(worksheet, columnNames);
     }
+    
+    public boolean isAccountNumberCol( int col ) {
+    	return col == 1;
+    }
+    public boolean isExpirationCol( int col ) {
+    	return col == 2;
+    }
+    public boolean isCVCCol( int col ) {
+    	return col == 3;
+    }
+    public boolean isPinCol( int col ) {
+    	return col == 4;
+    }
+    
 
 
     public Object getValueAt(int row, int col) {
@@ -50,7 +65,10 @@ public class CreditCardTableModel extends AbstractWorksheetModel {
         if ( data == null ) {
         	return;
         }
-        String sval = String.valueOf(value);
+        if ( value == null ) {
+        	value = "";
+        }
+        String sval = StringUtils.safeTrim(String.valueOf(value));
         switch(col) {
         case 0:
         	data.put( SERVICE, sval );
@@ -68,7 +86,6 @@ public class CreditCardTableModel extends AbstractWorksheetModel {
         	data.put( PIN, sval );
         	break;
         }
-        getWorksheet().setModified(true);
         fireTableCellUpdated(row, col);
      }
 

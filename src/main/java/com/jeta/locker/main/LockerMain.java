@@ -11,9 +11,10 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.UIManager;
 
+import com.alee.laf.WebLookAndFeel;
 import com.jeta.locker.common.LockerException;
 import com.jeta.locker.common.StringUtils;
-import com.jeta.locker.config.LockerProperties;
+import com.jeta.locker.config.LockerConfig;
 
 public class LockerMain {
 	
@@ -25,19 +26,25 @@ public class LockerMain {
 		 */
 		System.setProperty("swing.volatileImageBufferEnabled", "false" );
 		try {
-			LockerProperties.initialize();
+			LockerConfig.initialize();
 		} catch( Exception e ) {
-			JOptionPane.showMessageDialog(null,  "Unable to load properties file:\n" + LockerProperties.getConfigFile() );
+			JOptionPane.showMessageDialog(null,  "Unable to load properties file:\n" + LockerConfig.getConfigFile() );
 			System.exit(0);
 		}
 		
 		try {
-			System.setProperty("apple.laf.useScreenMenuBar", "true");
-			System.setProperty("com.apple.mrj.application.apple.menu.about.name", "WikiTeX");
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			String os = StringUtils.safeToLowerCase(System.getProperty("os.name"));
+			if ( os.contains("linux")) {
+				WebLookAndFeel.install();
+			} else {
+				System.setProperty("apple.laf.useScreenMenuBar", "true");
+				System.setProperty("com.apple.mrj.application.apple.menu.about.name", "WikiTeX");
+				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			}
 		} catch( Exception e) {
 			// ignore
 		}
+		
 
 		m_locker = new LockerModel( getPassword() );
 		

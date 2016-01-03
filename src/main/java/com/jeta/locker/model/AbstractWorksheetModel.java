@@ -26,6 +26,11 @@ public abstract class AbstractWorksheetModel extends AbstractTableModel {
     	fireTableRowsInserted( passwds.size()-1, passwds.size()-1);
     }
     
+
+    public JSONObject getAccount(int row) {
+		return getWorksheet().getAccount(row);
+	}
+
     public Worksheet getWorksheet() {
     	return m_worksheet;
     }

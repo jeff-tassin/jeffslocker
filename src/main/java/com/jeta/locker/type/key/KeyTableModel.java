@@ -3,7 +3,6 @@ package com.jeta.locker.type.key;
 import java.util.List;
 
 import static com.jeta.locker.common.LockerConstants.*;
-import javax.swing.table.AbstractTableModel;
 
 import org.json.JSONObject;
 
@@ -22,7 +21,8 @@ public class KeyTableModel extends AbstractWorksheetModel {
     public KeyTableModel( Worksheet worksheet ) {
     	super( worksheet, columnNames );
     }
-
+	
+	
     public Object getValueAt(int row, int col) {
     	List<JSONObject> passwds = getWorksheet().getEntries();
         JSONObject data = passwds.get(row);
@@ -63,8 +63,8 @@ public class KeyTableModel extends AbstractWorksheetModel {
         	data.put( PRIVATE_KEY, sval );
         	break;
         }
-        getWorksheet().setModified(true);
         fireTableCellUpdated(row, col);
      }
+
 
 }

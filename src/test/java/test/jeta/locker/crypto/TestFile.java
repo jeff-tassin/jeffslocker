@@ -7,7 +7,7 @@ import java.util.Base64;
 import org.junit.Test;
 
 import com.jeta.locker.common.LogUtils;
-import com.jeta.locker.config.LockerProperties;
+import com.jeta.locker.config.LockerConfig;
 
 public class TestFile {
 

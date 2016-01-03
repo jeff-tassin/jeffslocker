@@ -20,12 +20,14 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.TableModelEvent;
 
 import com.jeta.forms.components.panel.FormPanel;
+import com.jeta.locker.model.AbstractWorksheetModel;
 import com.jeta.locker.type.cc.CreditCardTableModel;
 import com.jeta.locker.type.cc.CreditCardView;
 import com.jeta.locker.type.key.KeyTableModel;
-import com.jeta.locker.type.key.KeyView;
+import com.jeta.locker.type.key.KeyAccountsView;
 import com.jeta.locker.type.password.PasswordView;
 import com.jeta.open.gui.framework.JETAPanel;
 import com.jeta.locker.type.password.PasswordTableModel;
@@ -40,33 +42,42 @@ public class LockerView extends JETAPanel {
     public LockerView( LockerModel model ) {
         super(new BorderLayout());
         m_model = model;
-        m_tabs = new JTabbedPane();
+        add( new FormPanel( "lockerMain.jfrm" ));
+        m_tabs = getTabbedPane( LockerViewConstants.ID_WORKSHEET_TABS );
         TabTitleEditListener listener = new TabTitleEditListener(m_tabs);
         m_tabs.addChangeListener(listener);
         m_tabs.addMouseListener(listener);
-        add(createToolbar(), BorderLayout.NORTH);
-        add( m_tabs, BorderLayout.CENTER);
         for( Worksheet worksheet : model.getWorksheets() ) {
         	addTab( worksheet );
         }
         setController( new LockerController(this) );
+        setText( LockerViewConstants.ID_MODIFIED, "");
+    }
+    
+    public LockerModel getModel() {
+    	return m_model;
     }
  
     private void addTab( Worksheet worksheet ) {
     	if ( worksheet.getType() == PASSWORD_TYPE ) {
     		PasswordTableModel model = new PasswordTableModel( worksheet );
     		m_tabs.add( worksheet.getName(), new PasswordView( model ) );
+    		model.addTableModelListener( evt -> { tableChanged(evt); } );
     	} else if ( worksheet.getType() == CREDIT_CARD_TYPE ) {
     		CreditCardTableModel model = new CreditCardTableModel( worksheet );
     		m_tabs.add( worksheet.getName(), new CreditCardView( model ) );
+    		model.addTableModelListener( evt -> { tableChanged(evt); } );
     	} else if( worksheet.getType() == KEY_TYPE ) {
     		KeyTableModel model = new KeyTableModel( worksheet );
-    		m_tabs.add( worksheet.getName(), new KeyView( model ) );
+    		m_tabs.add( worksheet.getName(), new KeyAccountsView( model ) );
+    		model.addTableModelListener( evt -> { tableChanged(evt); } );
     	}
     }
-   
-    private JETAPanel createToolbar() {
-    	return new FormPanel( "lockerToolbar.jfrm" );
+    
+    private void tableChanged(TableModelEvent evt) {
+    	AbstractWorksheetModel model = (AbstractWorksheetModel)evt.getSource();
+    	model.getWorksheet().setModified(true);
+        setText( LockerViewConstants.ID_MODIFIED, "Modified");
     }
   
    
@@ -80,8 +91,8 @@ public class LockerView extends JETAPanel {
     		CreditCardView view = (CreditCardView)lview;
     		CreditCardTableModel model = view.getModel();
     		return model.getWorksheet();
-    	} else if ( lview instanceof KeyView ) {
-    		KeyView view = (KeyView)lview;
+    	} else if ( lview instanceof KeyAccountsView ) {
+    		KeyAccountsView view = (KeyAccountsView)lview;
     		KeyTableModel model = view.getModel();
     		return model.getWorksheet();
     	}
