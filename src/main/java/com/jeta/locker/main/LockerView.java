@@ -85,8 +85,7 @@ public class LockerView extends JETAPanel {
     	Object lview = m_tabs.getComponentAt( tabIndex );
     	if ( lview instanceof PasswordView ) {
     		PasswordView view = (PasswordView)lview;
-    		PasswordTableModel model = view.getModel();
-    		return model.getWorksheet();
+    		return view.getModel().getWorksheet();
     	} else if ( lview instanceof CreditCardView ) {
     		CreditCardView view = (CreditCardView)lview;
     		CreditCardTableModel model = view.getModel();
