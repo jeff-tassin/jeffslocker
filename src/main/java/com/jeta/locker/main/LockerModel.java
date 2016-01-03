@@ -74,6 +74,10 @@ public class LockerModel {
 				try {
 					jsonstr = AES.decrypt( getLockerPassword(), data );
 				} catch( InvalidKeyException e ) {
+					/**
+					 * this exception can be called if you encrypted with 256 bits but are using 128 bit defaults that
+					 * come with JDK.
+					 */
 					throw new LockerException( e.getMessage() + "\nCheck that you have installed 256bit extensions.");
 				} catch( Exception e ) {
 					throw new LockerException( "Invalid password.");

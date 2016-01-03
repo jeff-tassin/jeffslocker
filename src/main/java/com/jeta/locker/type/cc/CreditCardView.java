@@ -63,6 +63,7 @@ public class CreditCardView extends JETAPanel {
    
     
         m_table.setDefaultRenderer( String.class, new CCRenderer() );
+        setController( new CreditCardController(this));
     }
     
 

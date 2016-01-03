@@ -39,8 +39,8 @@ public class CreditCardTableModel extends AbstractWorksheetModel {
 
 
     public Object getValueAt(int row, int col) {
-    	List<JSONObject> passwds = getWorksheet().getEntries();
-        JSONObject data = passwds.get(row);
+    	List<JSONObject> accounts = getWorksheet().getEntries();
+        JSONObject data = accounts.get(row);
         if ( data == null ) {
         	return "";
         }
@@ -60,8 +60,8 @@ public class CreditCardTableModel extends AbstractWorksheetModel {
     }
     
     public void setValueAt(Object value, int row, int col) {
-    	List<JSONObject> passwds = getWorksheet().getEntries();
-        JSONObject data = passwds.get(row);
+    	List<JSONObject> accounts = getWorksheet().getEntries();
+        JSONObject data = accounts.get(row);
         if ( data == null ) {
         	return;
         }

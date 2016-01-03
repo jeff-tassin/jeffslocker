@@ -9,13 +9,13 @@ repositories {
     mavenCentral()
 }
 
-// The shortcut form for declaring external dependencies looks like “group:name:version”.
 dependencies {
-    compile 'junit:junit:4.12', 'org.json:json:20151123', 'commons-codec:commons-codec:1.10', 'org.apache.commons:commons-lang3:3.4'
+    compile 'junit:junit:4.12', 'org.json:json:20151123', 'commons-codec:commons-codec:1.10', 'org.apache.commons:commons-lang3:3.4',
+    	files('src/main/lib/formsrt.jar')
 }
 
 
-task buildJar(type: Jar) {
+task deploy(type: Jar) {
     manifest {
         attributes 'Locker': 'Locker Jar',  
         	'Implementation-Version': 1.0,

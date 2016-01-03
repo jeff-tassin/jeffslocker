@@ -42,8 +42,6 @@ public class PasswordView extends JETAPanel {
  
 	private PasswordTableModel m_model;
 	private JTable m_table;
-	private JButton m_addBtn;
-	private JButton m_deleteBtn;
 	private boolean m_showPasswords = false;
  
     public PasswordView( PasswordTableModel model ) {
@@ -53,7 +51,6 @@ public class PasswordView extends JETAPanel {
         m_table = getTable(PasswordConstants.ID_ACCOUNTS_TABLE);
         m_table.setModel(model);
         m_model = model;
-       // m_table = new JTable(model);
         m_table.setPreferredScrollableViewportSize(new Dimension(500, 70));
         m_table.setFillsViewportHeight(true);
         m_table.setAutoCreateRowSorter(true);
@@ -61,7 +58,6 @@ public class PasswordView extends JETAPanel {
         m_table.setCellSelectionEnabled(true);
         m_table.setRowHeight(26);
         m_table.setGridColor( new Color(225,225,225) );
-       // m_table.setName(PasswordConstants.ID_ACCOUNTS_TABLE);
       
         m_table.setComponentPopupMenu( createContextMenu() );
         Font font = m_table.getFont();
@@ -93,18 +89,8 @@ public class PasswordView extends JETAPanel {
         };
     
         m_table.setDefaultRenderer( String.class, cellRenderer);
-
-        //Create the scroll pane and add the table to it.
-       // JScrollPane scrollPane = new JScrollPane(m_table);
- 
-        //Set up renderer and editor for the Favorite Color column.
- 
-        //Add the scroll pane to this panel.
-       // add(createToolbar(), BorderLayout.NORTH);
-       // add(scrollPane, BorderLayout.CENTER);
         setUIDirector( new PasswordUIDirector(this));
         setController( new PasswordController(this));
-    
     }
     
     public void showPasswords( boolean show ) {
@@ -137,60 +123,5 @@ public class PasswordView extends JETAPanel {
     public Worksheet getWorksheet() {
     	return m_model.getWorksheet();
     }
-   
-    private JETAPanel createToolbar() {
-    	return new FormPanel("passwordsToolbar.jfrm");
-    }
-    private JPanel createToolbar2() {
-    	try {
-    		JPanel panel = new JPanel();
-    		panel.setLayout( new FlowLayout(FlowLayout.LEFT));
-    		panel.add( new JLabel("Accounts:"));
-    		m_addBtn = new JButton("Add"); // + (plus)
-    		panel.add( m_addBtn );
-    		m_addBtn.addActionListener(new ActionListener() {
-
-    			@Override
-    			public void actionPerformed(ActionEvent e) {
-    				// TODO Auto-generated method stub
-    				JSONObject acct = new JSONObject();
-    				acct.put( LockerConstants.ID, LockerUtils.generateId() );
-    				m_model.addRow( acct );
-    			}
-    		});
-
-    		m_deleteBtn = new JButton("Delete"); // (trash)
-    		panel.add( m_deleteBtn );
-    		m_deleteBtn.addActionListener(new ActionListener() {
-    			@Override
-    			public void actionPerformed(ActionEvent e) {
-
-    				// TODO Auto-generated method stub
-    				int result = JOptionPane.showConfirmDialog(null,"Delete selected account?", "Confirm", JOptionPane.YES_NO_OPTION);
-    				if ( result == JOptionPane.YES_OPTION ) {
-    					int row = m_table.convertRowIndexToModel( m_table.getSelectedRow() );
-    					m_model.deleteRow( row );
-    				}
-    			}
-    		});
-    		m_deleteBtn.setEnabled(false);
-
-    		final JCheckBox cbox = new JCheckBox("Show Passwords");
-    		cbox.addActionListener( new ActionListener() {
-    			@Override
-    			public void actionPerformed(ActionEvent e) {
-    				showPasswords( cbox.isSelected() );
-    			}
-    		});
-    		panel.add( cbox );
-
-    		return panel;
-    	} catch (Exception e ) {
-    		e.printStackTrace();
-    	}
-    	return new JPanel();
-
-    }
-
    
 }

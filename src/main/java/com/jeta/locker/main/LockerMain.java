@@ -10,8 +10,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.UIManager;
-
-import com.alee.laf.WebLookAndFeel;
 import com.jeta.locker.common.LockerException;
 import com.jeta.locker.common.StringUtils;
 import com.jeta.locker.config.LockerConfig;
@@ -21,10 +19,6 @@ public class LockerMain {
 	private LockerModel m_locker;
 	
 	public LockerMain() throws LockerException {
-		/**
-		 * Fix Mac slow rendering
-		 */
-		System.setProperty("swing.volatileImageBufferEnabled", "false" );
 		try {
 			LockerConfig.initialize();
 		} catch( Exception e ) {
@@ -35,8 +29,13 @@ public class LockerMain {
 		try {
 			String os = StringUtils.safeToLowerCase(System.getProperty("os.name"));
 			if ( os.contains("linux")) {
-				WebLookAndFeel.install();
+				// use standard look and feel for Linux
 			} else {
+				/**
+				 * Fix Mac slow rendering
+				 */
+				System.setProperty("swing.volatileImageBufferEnabled", "false" );
+				
 				System.setProperty("apple.laf.useScreenMenuBar", "true");
 				System.setProperty("com.apple.mrj.application.apple.menu.about.name", "WikiTeX");
 				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
