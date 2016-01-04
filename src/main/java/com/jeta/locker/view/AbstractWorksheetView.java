@@ -67,7 +67,10 @@ public abstract class AbstractWorksheetView extends JETAPanel {
 	
 
 	public JSONObject getSelectedAccount() {
-		int row = getTable().convertRowIndexToModel(getTable().getSelectedRow());
+		int row = getTable().getSelectedRow();
+		if ( row >= 0 ) {
+			row = getTable().convertRowIndexToModel(row);
+		}
 		return row >=0 ? m_model.getAccount(row) : null;
 	}
 	public abstract JTable getTable();

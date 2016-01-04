@@ -15,7 +15,7 @@ dependencies {
 }
 
 
-task deploy(type: Jar) {
+task deploy(type: Jar, dependsOn: build) {
     manifest {
         attributes 'Locker': 'Locker Jar',  
         	'Implementation-Version': 1.0,

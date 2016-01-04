@@ -47,7 +47,7 @@ public class LockerMain {
 
 		m_locker = new LockerModel( getPassword() );
 		
-		JFrame frame = new JFrame("My Locker");
+		JFrame frame = new JFrame("Jeff's Locker");
 		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.addWindowListener( new WindowController() );
