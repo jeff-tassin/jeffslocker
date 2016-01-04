@@ -6,18 +6,12 @@ import static com.jeta.locker.common.LockerConstants.KEY_TYPE;
 import static com.jeta.locker.common.LockerConstants.PASSWORD_TYPE;
 
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
+import javax.swing.JTabbedPane;
 
-
+import com.jeta.forms.components.panel.FormPanel;
+import com.jeta.locker.common.LockerUtils;
 import com.jeta.open.gui.framework.JETAController;
 import com.jeta.open.gui.framework.JETADialog;
 import com.jeta.open.gui.utils.JETAToolbox;
@@ -26,8 +20,9 @@ public class LockerController extends JETAController {
 	
 	public LockerController(LockerView view) {
 		super(view);
-		assignAction( LockerViewConstants.ID_ABOUT_LOCKER, evt -> { aboutLocker(); } );
-		assignAction( LockerViewConstants.ID_SAVE, evt -> { saveLocker();} );
+		assignAction( LockerViewConstants.ID_ABOUT_LOCKER, evt -> aboutLocker() );
+		assignAction( LockerViewConstants.ID_SAVE, evt -> saveLocker() );
+		assignAction( LockerViewConstants.ID_ADD_WORKSHEET, evt -> addWorksheet() );
 	}
 	
 	public void aboutLocker() {
@@ -44,64 +39,47 @@ public class LockerController extends JETAController {
 	public void saveLocker() {
 		try {
 			((LockerView)getView()).getModel().save();
-			((LockerView)getView()).setText( LockerViewConstants.ID_MODIFIED, "");
+			((LockerView)getView()).enableComponent( LockerViewConstants.ID_SAVE, false );
 		} catch( Exception e ) {
 			JOptionPane.showMessageDialog(null,  "Error: " + e.getLocalizedMessage());
 		}
 	}
 
-	public void newWorksheet() {
-		int type = promptForWorksheetType();
+	public void addWorksheet() {
+		int type = invokeWorksheetDialog();
 		if ( type >= 0 ) {
-			/*
-				String name =  "Worksheet " + (m_tabs.getTabCount() + 1);
-				Worksheet worksheet = new Worksheet( LockerUtils.generateId(), name, type);
-				addTab(worksheet); 
-				m_model.addWorksheet( worksheet );
-			 */
+			LockerView view = (LockerView)getView();
+			JTabbedPane tabs = view.getTabbedPane( LockerViewConstants.ID_WORKSHEET_TABS );
+			String name =  "Worksheet " + (tabs.getTabCount() + 1);
+			Worksheet worksheet = new Worksheet( LockerUtils.generateId(), name, type);
+			view.addTab(worksheet); 
+			view.getModel().addWorksheet( worksheet );
+			tabs.setSelectedIndex( tabs.getTabCount() - 1 );
 		}
 	}
 		
-		 
-	private int promptForWorksheetType() {
-		JPanel panel = new JPanel();
-		ButtonGroup group = new ButtonGroup();
-		BoxLayout layout = new BoxLayout(panel, BoxLayout.Y_AXIS );
-		panel.setLayout( layout );
-		JRadioButton cbox1 = new JRadioButton("Password");
-		panel.add(cbox1);
-		group.add( cbox1 );
-		JRadioButton cbox2 = new JRadioButton( "Credit Card" );
-		panel.add(cbox2);
-		group.add( cbox2 );
-		JRadioButton cbox3 = new JRadioButton( "Key" );
-		panel.add(cbox3);
-		group.add( cbox3 );
-		
-		String[] options = new String[]{"OK", "Cancel"};
-		int option = JOptionPane.showOptionDialog(null, panel, "Enter worksheet type",
-				JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE,
-				null, options, options[0]);
-		if(option == 0) {
-			if ( cbox1.isSelected() ) {
+	
+	// Generation Start
+	public static final String ID_PASSWORD = "password";  //javax.swing.JRadioButton
+	public static final String ID_CC = "cc";  //javax.swing.JRadioButton
+	public static final String ID_SSH_KEY = "ssh.key";  //javax.swing.JRadioButton
+	private int invokeWorksheetDialog() {
+		FormPanel form = new FormPanel( "newWorksheet.jfrm" );
+		form.setPreferredSize(new Dimension(300,180));
+		JETADialog dlg = JETAToolbox.invokeDialog( form,  null, "New Worksheet");
+		if ( dlg.isOk() ) {
+			if ( form.isSelected(ID_PASSWORD)) {
 				return PASSWORD_TYPE;
-			} else if ( cbox2.isSelected() ) {
+			} else if ( form.isSelected( ID_CC ) ) {
 				return CREDIT_CARD_TYPE;
-			} else if ( cbox3.isSelected() ) {
+			} else if ( form.isSelected( ID_SSH_KEY ) ) {
 				return KEY_TYPE;
 			}
-		} else {
-			return -1;
 		}
 		return -1;
 	}
 	
 
-	public class DeleteAction implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-		}
-	}
-
+	
 	
 }

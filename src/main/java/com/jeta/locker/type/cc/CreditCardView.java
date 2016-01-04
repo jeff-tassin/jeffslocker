@@ -23,6 +23,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import com.jeta.forms.components.panel.FormPanel;
 import com.jeta.locker.main.Worksheet;
+import com.jeta.locker.model.ImmutableTableEvent;
 import com.jeta.locker.type.password.PasswordConstants;
 import com.jeta.locker.view.AbstractWorksheetView;
 import com.jeta.locker.view.LockerTableCellRenderer;
@@ -33,7 +34,9 @@ public class CreditCardView extends AbstractWorksheetView {
  
 	private CreditCardTableModel m_model;
 	private JTable m_table;
-	private boolean m_showCC=true;
+	private boolean m_showNumber = false;
+	private boolean m_showCVC = false;
+	private boolean m_showPin = false;
  
     public CreditCardView( CreditCardTableModel model ) {
         super(model);
@@ -45,17 +48,30 @@ public class CreditCardView extends AbstractWorksheetView {
         initializeTable(m_table);
      
         m_table.setComponentPopupMenu( createContextMenu() );
-        m_table.setDefaultRenderer( String.class, new CCRenderer() );
+        m_table.setDefaultRenderer( String.class, new CreditCardRenderer() );
         setController( new CreditCardController(this));
     }
     
     public JTable getTable() {
     	return m_table;
     }
+    
+    public void showNumber( boolean show ) {
+    	m_showNumber = show;
+    	m_model.fireTableChanged( new ImmutableTableEvent(getModel()) );
+    }
+    public void showCVC( boolean show ) {
+    	m_showCVC = show;
+    	m_model.fireTableChanged( new ImmutableTableEvent(getModel()) );
+    }
+    public void showPin( boolean show ) {
+    	m_showPin = show;
+    	m_model.fireTableChanged( new ImmutableTableEvent(getModel()) );
+    }
         
-    private class CCRenderer extends LockerTableCellRenderer {
-        private String formatAccountNumber(Object value) {
-        	if ( !m_showCC ) {
+    private class CreditCardRenderer extends LockerTableCellRenderer {
+        private String formatValue(Object value, boolean show) {
+        	if ( !show ) {
         		return "*******************";
         	}
         	String sval = String.valueOf(value);
@@ -73,7 +89,11 @@ public class CreditCardView extends AbstractWorksheetView {
         		value = "";
         	}
         	if ( m_model.isAccountNumberCol(col) ) {
-        		value = formatAccountNumber(value);
+        		value = formatValue(value, m_showNumber);
+        	} else if ( m_model.isPinCol(col) ) {
+        		value = formatValue(value, m_showPin);
+        	} else if ( m_model.isCVCCol(col) ) {
+        		value = formatValue(value, m_showCVC);
         	} 
             super.getTableCellRendererComponent(table, value, isSelected, hasFocus,row, col);
             return this;

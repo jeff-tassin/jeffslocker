@@ -27,7 +27,7 @@ public class PasswordController  extends JETAController {
 		super(view);
 		assignAction( PasswordConstants.ID_GENERATE_PASSWORD, evt -> generatePassword() );
 		assignAction( PasswordConstants.ID_ADD_ACCOUNT, evt -> addPasswordAccount() );
-		
+		assignAction( PasswordConstants.ID_SHOW_PASSWORDS, evt -> showPasswords() );
 		assignListener( PasswordConstants.ID_ACCOUNTS_TABLE, new ListSelectionListener() {
         	public void valueChanged(ListSelectionEvent e) {
         	//	uiChanged();
@@ -41,11 +41,17 @@ public class PasswordController  extends JETAController {
 		return (PasswordTableModel)table.getModel();
 	}
 	
+	public void showPasswords() {
+		PasswordView view = (PasswordView)getView();
+		view.showPasswords( view.isSelected( PasswordConstants.ID_SHOW_PASSWORDS ));
+	}
+	
 	public void addPasswordAccount() {
 		JSONObject acct = new JSONObject();
 		acct.put( LockerConstants.ID, LockerUtils.generateId() );
 		getAccountsModel().addRow( acct );
 	}
+	
 	public void generatePassword() {
 		PasswordGeneratorView view = new PasswordGeneratorView();
 		JETADialog dlg = JETAToolbox.invokeDialog( view, null, "Generate Password", null );

@@ -24,6 +24,7 @@ import javax.swing.event.TableModelEvent;
 
 import com.jeta.forms.components.panel.FormPanel;
 import com.jeta.locker.model.AbstractWorksheetModel;
+import com.jeta.locker.model.ImmutableTableEvent;
 import com.jeta.locker.type.cc.CreditCardTableModel;
 import com.jeta.locker.type.cc.CreditCardView;
 import com.jeta.locker.type.key.KeyTableModel;
@@ -52,14 +53,14 @@ public class LockerView extends JETAPanel {
         	addTab( worksheet );
         }
         setController( new LockerController(this) );
-        setText( LockerViewConstants.ID_MODIFIED, "");
+        setText( LockerViewConstants.ID_DATA_FILE, "File: " + model.getFilePath() );
     }
     
     public LockerModel getModel() {
     	return m_model;
     }
  
-    private void addTab( Worksheet worksheet ) {
+    public void addTab( Worksheet worksheet ) {
     	if ( worksheet.getType() == PASSWORD_TYPE ) {
     		PasswordTableModel model = new PasswordTableModel( worksheet );
     		m_tabs.add( worksheet.getName(), new PasswordView( model ) );
@@ -76,9 +77,11 @@ public class LockerView extends JETAPanel {
     }
     
     private void tableChanged(TableModelEvent evt) {
-    	AbstractWorksheetModel model = (AbstractWorksheetModel)evt.getSource();
-    	model.getWorksheet().setModified(true);
-        setText( LockerViewConstants.ID_MODIFIED, "Modified");
+    	if ( !(evt instanceof ImmutableTableEvent) ) {
+    		AbstractWorksheetModel model = (AbstractWorksheetModel)evt.getSource();
+    		model.getWorksheet().setModified(true);
+    		enableComponent( LockerViewConstants.ID_SAVE, true );
+    	}
     }
   
    

@@ -16,6 +16,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import com.jeta.forms.components.panel.FormPanel;
 
 import com.jeta.locker.main.Worksheet;
+import com.jeta.locker.model.ImmutableTableEvent;
 import com.jeta.locker.view.AbstractWorksheetView;
 import com.jeta.locker.view.LockerTableCellRenderer;
 import com.jeta.open.gui.framework.JETAPanel;
@@ -56,7 +57,7 @@ public class PasswordView extends AbstractWorksheetView {
     
     public void showPasswords( boolean show ) {
     	m_showPasswords = show;
-    	m_model.fireTableDataChanged();
+    	m_model.fireTableChanged( new ImmutableTableEvent(getModel()) );
     }
         
     public JTable getTable() {

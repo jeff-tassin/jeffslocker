@@ -15,7 +15,10 @@ public class CreditCardController extends JETAController {
 
 	public CreditCardController(CreditCardView view) {
 		super(view);
-		assignAction( CreditCardConstants.ID_ADD_ACCOUNT, evt -> { addCCAccount(); } );
+		assignAction( CreditCardConstants.ID_ADD_ACCOUNT, evt -> addAccount() );
+		assignAction( CreditCardConstants.ID_SHOW_CC, evt-> showNumber() );
+		assignAction( CreditCardConstants.ID_SHOW_CVC, evt-> showCVC() );
+		assignAction( CreditCardConstants.ID_SHOW_PIN, evt-> showPin() );
 	}
 	
 	public CreditCardTableModel getAccountsModel() {
@@ -24,7 +27,21 @@ public class CreditCardController extends JETAController {
 		return (CreditCardTableModel)table.getModel();
 	}
 	
-	public void addCCAccount() {
+	
+	public void showNumber() {
+		CreditCardView view = (CreditCardView)getView();
+		view.showNumber( view.isSelected(CreditCardConstants.ID_SHOW_CC) );
+	}
+	public void showCVC() {
+		CreditCardView view = (CreditCardView)getView();
+		view.showCVC( view.isSelected(CreditCardConstants.ID_SHOW_CVC) );
+	}
+	public void showPin() {
+		CreditCardView view = (CreditCardView)getView();
+		view.showPin( view.isSelected(CreditCardConstants.ID_SHOW_PIN) );
+	}
+	
+	public void addAccount() {
 		JSONObject acct = new JSONObject();
 		acct.put( LockerConstants.ID, LockerUtils.generateId() );
 		getAccountsModel().addRow( acct );

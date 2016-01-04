@@ -40,6 +40,9 @@ public class LockerModel {
 			throw LockerException.create( e );
 		}
 	}
+	public String getFilePath() {
+		return LockerConfig.getDataFile();
+	}
 	
 	public String getLockerPassword() {
 		return m_password;
