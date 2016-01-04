@@ -1,16 +1,26 @@
 package test.jeta.locker.type.password;
 
-import java.awt.event.ActionListener;
+
+
+import java.awt.Dimension;
 
 import org.junit.Test;
 
-import com.jeta.locker.type.password.PasswordController;
+import com.jeta.locker.main.AuthenticateDialog;
+import com.jeta.open.gui.framework.JETADialog;
+import com.jeta.open.gui.utils.JETAToolbox;
 
 public class TestPasswordView {
 
 	@Test
-	public void testGeneratePassword() {
-		//ActionListener listener = new PasswordController.GeneratePasswordAction();
-		//listener.actionPerformed(null);
+	public void testPassword() {
+		/*
+		AuthenticateView view = new AuthenticateView();
+		view.setPreferredSize( new Dimension(350,180));
+		JETADialog dlg = JETAToolbox.invokeDialog( view, null, "Authenticate", view.getTextComponent(AuthenticateView.ID_PASSWORD) );
+		if (dlg.isOk()) {
+			
+		}
+		*/
 	}
 }

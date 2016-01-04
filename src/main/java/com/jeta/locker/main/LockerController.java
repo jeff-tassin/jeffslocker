@@ -5,6 +5,7 @@ import static com.jeta.locker.common.LockerConstants.CREDIT_CARD_TYPE;
 import static com.jeta.locker.common.LockerConstants.KEY_TYPE;
 import static com.jeta.locker.common.LockerConstants.PASSWORD_TYPE;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

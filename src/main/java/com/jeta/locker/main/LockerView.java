@@ -29,6 +29,7 @@ import com.jeta.locker.type.cc.CreditCardView;
 import com.jeta.locker.type.key.KeyTableModel;
 import com.jeta.locker.type.key.KeyAccountsView;
 import com.jeta.locker.type.password.PasswordView;
+import com.jeta.locker.view.AbstractWorksheetView;
 import com.jeta.open.gui.framework.JETAPanel;
 import com.jeta.locker.type.password.PasswordTableModel;
 
@@ -83,18 +84,10 @@ public class LockerView extends JETAPanel {
    
     private Worksheet getWorksheetAt( int tabIndex ) {
     	Object lview = m_tabs.getComponentAt( tabIndex );
-    	if ( lview instanceof PasswordView ) {
-    		PasswordView view = (PasswordView)lview;
+    	if ( lview instanceof AbstractWorksheetView ) {
+    		AbstractWorksheetView view = (AbstractWorksheetView)lview;
     		return view.getModel().getWorksheet();
-    	} else if ( lview instanceof CreditCardView ) {
-    		CreditCardView view = (CreditCardView)lview;
-    		CreditCardTableModel model = view.getModel();
-    		return model.getWorksheet();
-    	} else if ( lview instanceof KeyAccountsView ) {
-    		KeyAccountsView view = (KeyAccountsView)lview;
-    		KeyTableModel model = view.getModel();
-    		return model.getWorksheet();
-    	}
+    	} 
     	return null;
     }
     

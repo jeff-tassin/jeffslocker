@@ -8,6 +8,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
+import java.nio.file.CopyOption;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.security.InvalidKeyException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,6 +31,7 @@ public class LockerModel {
 	private List<Worksheet>  m_worksheets = new ArrayList<Worksheet>();
 	
 	public LockerModel( String password ) throws LockerException {
+		System.out.println( "loading data file: " + LockerConfig.getDataFile() );
 		m_password = password;
 		try {
 			String filePath = LockerConfig.getDataFile();
@@ -106,31 +110,20 @@ public class LockerModel {
 
 	public void save() throws LockerException {
 		try {
+			String configFile = StringUtils.buildFilePath( LockerConfig.getDataDirectory(), "locker.data" );
 	
 			/**
-			 * first save backup
+			 * first make a backup
 			 */
-			File folder = new File(LockerConfig.getDataDirectory());
-			File[] backups = folder.listFiles( new FilenameFilter() {
-				@Override
-				public boolean accept(File dir, String name) {
-					if ( name.startsWith("locker.backup")){
-						return true;
-					}
-					return false;
-				}
-			});
-			
 			SimpleDateFormat format = new SimpleDateFormat("MMM_d_yyyy_HH_mm_ss");
 			String backupFile = "locker.backup." + format.format( new Date() );
 			String backupPath = StringUtils.buildFilePath( LockerConfig.getDataDirectory(), backupFile );
-			writeData( backupPath );
 			
+			Files.copy( new File(configFile).toPath(), new File(backupPath).toPath(), StandardCopyOption.COPY_ATTRIBUTES);
 			/**
 			 * now write data file
 			 */
-			String filePath = StringUtils.buildFilePath( LockerConfig.getDataDirectory(), "locker.data" );
-			writeData(filePath);
+			writeData(configFile);
 			for( Worksheet ws : m_worksheets ) {
 				ws.setModified(false);
 			}

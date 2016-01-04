@@ -1,6 +1,7 @@
 package com.jeta.locker.main;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 import javax.swing.JEditorPane;
 
@@ -17,6 +18,7 @@ public class AboutView extends JETAPanel {
 		m_view = new FormPanel("about.jfrm");
 		add(m_view, BorderLayout.CENTER);
 		createCreditsPanel();
+		setPreferredSize( new Dimension(550,450) );
 	}
 
 	public void createCreditsPanel() {

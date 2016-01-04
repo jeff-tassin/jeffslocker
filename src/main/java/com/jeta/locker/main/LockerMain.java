@@ -1,6 +1,7 @@
 package com.jeta.locker.main;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -13,6 +14,8 @@ import javax.swing.UIManager;
 import com.jeta.locker.common.LockerException;
 import com.jeta.locker.common.StringUtils;
 import com.jeta.locker.config.LockerConfig;
+import com.jeta.open.gui.framework.JETADialog;
+import com.jeta.open.gui.utils.JETAToolbox;
 
 public class LockerMain {
 	
@@ -45,7 +48,7 @@ public class LockerMain {
 		}
 		
 
-		m_locker = new LockerModel( getPassword() );
+		m_locker = authenticate();
 		
 		JFrame frame = new JFrame("Jeff's Locker");
 		
@@ -54,27 +57,20 @@ public class LockerMain {
 
 		frame.getContentPane().add( createContent(), BorderLayout.CENTER);
 
-		frame.setLocation(100, 100);
 		frame.setSize( 1000,  600 );
+		JETAToolbox.centerWindow(frame);
 		frame.setVisible(true);
 	}
 	
-	private String getPassword() {
-		JPanel panel = new JPanel();
-		JLabel label = new JLabel("Enter password:");
-		JPasswordField pass = new JPasswordField(25);
-		panel.add(label);
-		panel.add(pass);
-		String[] options = new String[]{"OK", "Cancel"};
-		int option = JOptionPane.showOptionDialog(null, panel, "Authentication Required",
-		                         JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE,
-		                         null, options, options[0]);
-		if(option == 0) {
-		    return new String(pass.getPassword());
+	private LockerModel authenticate() {
+		AuthenticateDialog dlg = new AuthenticateDialog();
+		dlg.showCenter();
+		if ( dlg.isOk() ) {
+			return dlg.getModel();
 		} else {
 			System.exit(0);
+			return null;
 		}
-		return null;
 	}
 
 	private JPanel createContent() throws LockerException {

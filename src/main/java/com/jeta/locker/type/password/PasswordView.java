@@ -17,6 +17,7 @@ import com.jeta.forms.components.panel.FormPanel;
 
 import com.jeta.locker.main.Worksheet;
 import com.jeta.locker.view.AbstractWorksheetView;
+import com.jeta.locker.view.LockerTableCellRenderer;
 import com.jeta.open.gui.framework.JETAPanel;
 
 
@@ -37,20 +38,12 @@ public class PasswordView extends AbstractWorksheetView {
       
         m_table.setComponentPopupMenu( createContextMenu() );
         
-        DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer() {
-        	Color evenColor = new Color(245,245,245);
+        DefaultTableCellRenderer cellRenderer = new LockerTableCellRenderer() {
             @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
-                    int row, int column) {
-            	
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             	if ( m_model.isPasswordColumn(column) && value != null ) {
             		value = m_showPasswords ? value : "*******************";
             	}  
-            	if ( row % 2 == 0 ) {
-                	this.setBackground(Color.white);
-                } else {
-                	this.setBackground(evenColor);
-                }
                 super.getTableCellRendererComponent(table, value, isSelected, hasFocus,row, column);
                 return this;
             }

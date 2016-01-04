@@ -32,7 +32,7 @@ public class AES {
 		 * The password decoration is a series of random digits stored in a local config file. 
 		 * The config file stores some keys (but not your password) for multi-factor authentication and therefore must be kept separate from your locker.data file.
 		 */
-		password = LockerConfig.getPasswordDecoration() + password;
+		password = LockerConfig.getPasswordPepper() + password;
 
 		//get salt
 		byte[] saltBytes = LockerConfig.getSalt().getBytes("UTF-8");
@@ -66,7 +66,7 @@ public class AES {
 		 * The password decoration is a series of random digits stored in a local config file. 
 		 * The config file stores some keys  (but not your password) for multi-factor authentication and therefore must be kept separate from your locker.data file.
 		 */
-		password = LockerConfig.getPasswordDecoration() + password;
+		password = LockerConfig.getPasswordPepper() + password;
 
 		byte[] saltBytes = LockerConfig.getSalt().getBytes("UTF-8");
 		// Derive the key

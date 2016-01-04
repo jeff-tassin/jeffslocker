@@ -32,7 +32,8 @@ public class LockerConfig {
 	public static final String KEY_SIZE = "key.size";
 	public static final String INIT_VECTOR = "init.vector";
 	public static final String SALT = "salt";
-	public static final String PASSWORD_DECORATION = "password.decoration";
+	public static final String PASSWORD_PEPPER = "password.pepper";
+	
 	
 	private static Properties m_properties = null;
 	
@@ -48,7 +49,7 @@ public class LockerConfig {
 	 * Get property by its key
 	 */
 	public static String getProperty(String key) {
-		String prop = m_properties.getProperty(key);
+		String prop = StringUtils.safeTrim(m_properties.getProperty(key));
 		return prop;
 	}
 
@@ -60,7 +61,7 @@ public class LockerConfig {
 	 * The data directory is where your locker.data is stored.  The locker.data contains your encrypted passwords.
 	 */
 	public static String getDataDirectory() {
-		return m_properties.getProperty( DATA_DIRECTORY );
+		return getProperty( DATA_DIRECTORY );
 	}
 	/**
 	 * @return the full path to locker.data.  This file contains your encrypted passwords.
@@ -114,8 +115,8 @@ public class LockerConfig {
 	 * The password decoration is prepended to your password during encrypt/decrypt.  This adds another factor
 	 * to your authentication.
 	 */
-	public static String getPasswordDecoration() {
-		return getProperty( PASSWORD_DECORATION );
+	public static String getPasswordPepper() {
+		return getProperty( PASSWORD_PEPPER );
 	}
 	
 	
@@ -134,8 +135,6 @@ public class LockerConfig {
 			m_properties.load(is);
 			is.close();
 
-			System.out.println( "loaded properties file.  data file: " + getDataFile() );
-			
 		} catch( Exception e ) {
 			throw LockerException.create(e);
 		}

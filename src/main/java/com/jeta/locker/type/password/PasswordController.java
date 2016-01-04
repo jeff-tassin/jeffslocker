@@ -25,8 +25,8 @@ public class PasswordController  extends JETAController {
 
 	public PasswordController(PasswordView view) {
 		super(view);
-		assignAction( PasswordConstants.ID_GENERATE_PASSWORD, evt -> { generatePassword(); } );
-		assignAction( PasswordConstants.ID_ADD_ACCOUNT, evt -> { addPasswordAccount(); } );
+		assignAction( PasswordConstants.ID_GENERATE_PASSWORD, evt -> generatePassword() );
+		assignAction( PasswordConstants.ID_ADD_ACCOUNT, evt -> addPasswordAccount() );
 		
 		assignListener( PasswordConstants.ID_ACCOUNTS_TABLE, new ListSelectionListener() {
         	public void valueChanged(ListSelectionEvent e) {
