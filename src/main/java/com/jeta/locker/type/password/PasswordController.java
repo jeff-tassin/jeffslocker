@@ -16,7 +16,7 @@ import org.json.JSONObject;
 import com.jeta.forms.components.panel.FormPanel;
 import com.jeta.locker.common.LockerConstants;
 import com.jeta.locker.common.LockerUtils;
-import com.jeta.locker.type.key.KeyConstants;
+import com.jeta.locker.type.key.SSHKeyConstants;
 import com.jeta.open.gui.framework.JETAController;
 import com.jeta.open.gui.framework.JETADialog;
 import com.jeta.open.gui.utils.JETAToolbox;
@@ -37,7 +37,7 @@ public class PasswordController  extends JETAController {
 	
 	public PasswordTableModel getAccountsModel() {
 		PasswordView view = (PasswordView)getView();
-		JTable table = view.getTable( KeyConstants.ID_KEY_TABLE );
+		JTable table = view.getTable( SSHKeyConstants.ID_KEY_TABLE );
 		return (PasswordTableModel)table.getModel();
 	}
 	
@@ -74,7 +74,7 @@ public class PasswordController  extends JETAController {
 		public void actionPerformed(ActionEvent evt) {
 			FormPanel panel = new FormPanel( "key.jfrm" );		
 			panel.setPreferredSize( new java.awt.Dimension(450,500));
-			JETADialog dlg = JETAToolbox.invokeDialog( panel, null, "Edit Key", panel.getTextField(KeyConstants.ID_DESCRIPTION) );
+			JETADialog dlg = JETAToolbox.invokeDialog( panel, null, "Edit Key", panel.getTextField(SSHKeyConstants.ID_DESCRIPTION) );
 			if (dlg.isOk()) {
 			}
 		}

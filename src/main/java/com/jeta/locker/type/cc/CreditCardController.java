@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 import com.jeta.locker.common.LockerConstants;
 import com.jeta.locker.common.LockerUtils;
-import com.jeta.locker.type.key.KeyConstants;
+import com.jeta.locker.type.key.SSHKeyConstants;
 import com.jeta.open.gui.framework.JETAController;
 
 
@@ -23,7 +23,7 @@ public class CreditCardController extends JETAController {
 	
 	public CreditCardTableModel getAccountsModel() {
 		CreditCardView view = (CreditCardView)getView();
-		JTable table = view.getTable( KeyConstants.ID_KEY_TABLE );
+		JTable table = view.getTable( SSHKeyConstants.ID_KEY_TABLE );
 		return (CreditCardTableModel)table.getModel();
 	}
 	

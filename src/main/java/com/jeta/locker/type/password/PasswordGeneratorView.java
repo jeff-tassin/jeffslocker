@@ -28,7 +28,7 @@ public class PasswordGeneratorView extends JETAPanel {
 		panel.setPreferredSize( new java.awt.Dimension(300,200));
 		add(panel, BorderLayout.CENTER);
 		setController( new Controller(this));
-		getTextField(ID_PASSWORD).setText(LockerUtils.generatePassword(8));
+		getTextField(ID_PASSWORD).setText(LockerUtils.generateRandomCharacters(8));
 	}
 	
 	public String getPassword() {
@@ -70,7 +70,7 @@ public class PasswordGeneratorView extends JETAPanel {
 				len = 16;
 				break;
 			}
-			PasswordGeneratorView.this.getTextField(ID_PASSWORD).setText(LockerUtils.generatePassword(len));
+			PasswordGeneratorView.this.getTextField(ID_PASSWORD).setText(LockerUtils.generateRandomCharacters(len));
 		}
 		
 	}

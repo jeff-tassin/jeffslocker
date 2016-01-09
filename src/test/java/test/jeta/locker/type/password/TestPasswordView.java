@@ -6,7 +6,7 @@ import java.awt.Dimension;
 
 import org.junit.Test;
 
-import com.jeta.locker.main.AuthenticateDialog;
+import com.jeta.locker.main.AuthenticateView;
 import com.jeta.open.gui.framework.JETADialog;
 import com.jeta.open.gui.utils.JETAToolbox;
 

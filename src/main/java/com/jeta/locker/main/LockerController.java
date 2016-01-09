@@ -21,8 +21,9 @@ public class LockerController extends JETAController {
 	public LockerController(LockerView view) {
 		super(view);
 		assignAction( LockerViewConstants.ID_ABOUT_LOCKER, evt -> aboutLocker() );
-		assignAction( LockerViewConstants.ID_SAVE, evt -> saveLocker() );
+		assignAction( LockerViewConstants.ID_SAVE_WORKSHEET, evt -> saveLocker() );
 		assignAction( LockerViewConstants.ID_ADD_WORKSHEET, evt -> addWorksheet() );
+		assignAction( LockerViewConstants.ID_CLOSE_WORKSHEET, evt -> closeWorksheet() );
 	}
 	
 	public void aboutLocker() {
@@ -39,7 +40,6 @@ public class LockerController extends JETAController {
 	public void saveLocker() {
 		try {
 			((LockerView)getView()).getModel().save();
-			((LockerView)getView()).enableComponent( LockerViewConstants.ID_SAVE, false );
 		} catch( Exception e ) {
 			JOptionPane.showMessageDialog(null,  "Error: " + e.getLocalizedMessage());
 		}
@@ -56,6 +56,21 @@ public class LockerController extends JETAController {
 			view.getModel().addWorksheet( worksheet );
 			tabs.setSelectedIndex( tabs.getTabCount() - 1 );
 		}
+	}
+
+	public void closeWorksheet() {
+		LockerModel model = ((LockerView)getView()).getModel();
+		if ( model !=null && model.isModified() ) {
+			int result = JOptionPane.showConfirmDialog(null,"Locker data has changed. Save to database?", "Confirm", JOptionPane.YES_NO_OPTION);
+			if ( result == JOptionPane.YES_OPTION ) {
+				try {
+					model.save();
+				} catch( Exception e ) {
+					JOptionPane.showMessageDialog(null,  "Error: " + e.getLocalizedMessage());
+				}
+			}
+		}
+		((LockerView)getView()).getMain().showLoginBarrier();
 	}
 		
 	

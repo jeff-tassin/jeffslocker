@@ -2,6 +2,7 @@ package com.jeta.locker.main;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -13,22 +14,16 @@ import javax.swing.JPasswordField;
 import javax.swing.UIManager;
 import com.jeta.locker.common.LockerException;
 import com.jeta.locker.common.StringUtils;
-import com.jeta.locker.config.LockerConfig;
+import com.jeta.locker.config.LockerKeys;
 import com.jeta.open.gui.framework.JETADialog;
 import com.jeta.open.gui.utils.JETAToolbox;
 
 public class LockerMain {
+	private AuthenticateView m_loginBarrier;
+	private JFrame m_frame;
 	
-	private LockerModel m_locker;
 	
 	public LockerMain() throws LockerException {
-		try {
-			LockerConfig.initialize();
-		} catch( Exception e ) {
-			JOptionPane.showMessageDialog(null,  "Unable to load properties file:\n" + LockerConfig.getConfigFile() );
-			System.exit(0);
-		}
-		
 		try {
 			String os = StringUtils.safeToLowerCase(System.getProperty("os.name"));
 			if ( os.contains("linux")) {
@@ -47,36 +42,37 @@ public class LockerMain {
 			// ignore
 		}
 		
-
-		m_locker = authenticate();
+		m_frame = new JFrame("Jeff's Locker");
 		
-		JFrame frame = new JFrame("Jeff's Locker");
+		m_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		m_frame.addWindowListener( new WindowController() );
+
+		m_loginBarrier = new AuthenticateView( this );
+		m_frame.getContentPane().add( m_loginBarrier, BorderLayout.CENTER);
 		
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.addWindowListener( new WindowController() );
-
-		frame.getContentPane().add( createContent(), BorderLayout.CENTER);
-
-		frame.setSize( 1000,  600 );
-		JETAToolbox.centerWindow(frame);
-		frame.setVisible(true);
+		m_frame.setSize( 1000,  600 );
+		JETAToolbox.centerWindow( m_frame );
+		m_frame.setVisible(true);
+		m_loginBarrier.setFocus();
 	}
 	
-	private LockerModel authenticate() {
-		AuthenticateDialog dlg = new AuthenticateDialog();
-		dlg.showCenter();
-		if ( dlg.isOk() ) {
-			return dlg.getModel();
-		} else {
-			System.exit(0);
-			return null;
+	public void openLocker( LockerModel model ) {
+		if ( m_loginBarrier != null ) {
+			//m_frame.remove( m_loginBarrier );
+			m_frame.getContentPane().removeAll();
+
+			m_frame.getContentPane().add( new LockerView( this, model ), BorderLayout.CENTER);
+			m_frame.getContentPane().revalidate();
+			m_loginBarrier = null;
 		}
 	}
-
-	private JPanel createContent() throws LockerException {
-		return new LockerView( m_locker );
+	
+	public void showLoginBarrier() {
+		m_frame.getContentPane().removeAll();
+		m_loginBarrier = new AuthenticateView(this);
+		m_frame.getContentPane().add( m_loginBarrier, BorderLayout.CENTER);
+		m_frame.revalidate();
 	}
-
 
 	public static void main(String[] args ) {
 		try {
@@ -89,7 +85,8 @@ public class LockerMain {
 	private class WindowController extends WindowAdapter {
 		@Override
 		public void windowClosing(WindowEvent evt) {
-			if ( m_locker.isModified() ) {
+			/*
+			if ( m_locker != null && m_locker.isModified() ) {
 				int result = JOptionPane.showConfirmDialog(null,"Locker data has changed. Save to database?", "Confirm", JOptionPane.YES_NO_OPTION);
 				if ( result == JOptionPane.YES_OPTION ) {
 					try {
@@ -99,6 +96,7 @@ public class LockerMain {
 					}
 				}
 			}
+			*/
 		}
 	}
 }

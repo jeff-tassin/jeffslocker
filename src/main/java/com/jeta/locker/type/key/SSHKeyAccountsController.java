@@ -17,19 +17,19 @@ import com.jeta.open.gui.framework.JETADialog;
 import com.jeta.open.gui.utils.JETAToolbox;
 
 
-public class KeyAccountsController  extends JETAController {
+public class SSHKeyAccountsController  extends JETAController {
 
-	public KeyAccountsController(KeyAccountsView view) {
+	public SSHKeyAccountsController(SSHKeyAccountsView view) {
 		super(view);
-		assignAction(KeyConstants.ID_ADD_KEY, evt -> { addAction(); } );
-		assignAction(KeyConstants.ID_EDIT_KEY, evt -> { editAction(); } );
-		assignAction(KeyConstants.ID_DELETE_KEY, evt -> { deleteAction(); } );
+		assignAction(SSHKeyConstants.ID_ADD_KEY, evt -> { addAction(); } );
+		assignAction(SSHKeyConstants.ID_EDIT_KEY, evt -> { editAction(); } );
+		assignAction(SSHKeyConstants.ID_DELETE_KEY, evt -> { deleteAction(); } );
 	}
 	
-	public KeyTableModel getAccountsModel() {
-		KeyAccountsView view = (KeyAccountsView)getView();
-		JTable table = view.getTable( KeyConstants.ID_KEY_TABLE );
-		return (KeyTableModel)table.getModel();
+	public SSHKeyTableModel getAccountsModel() {
+		SSHKeyAccountsView view = (SSHKeyAccountsView)getView();
+		JTable table = view.getTable( SSHKeyConstants.ID_KEY_TABLE );
+		return (SSHKeyTableModel)table.getModel();
 	}
 	
 	public void addAction() {
@@ -39,17 +39,17 @@ public class KeyAccountsController  extends JETAController {
 	}
 
 	public void editAction() {
-		KeyAccountsView acctsView = (KeyAccountsView)getView();
+		SSHKeyAccountsView acctsView = (SSHKeyAccountsView)getView();
 		JSONObject json = acctsView.getSelectedAccount();
 		if ( json != null ) {
-			KeyEditView editView = new KeyEditView(json);
+			SSHKeyEditView editView = new SSHKeyEditView(json);
 			editView.setPreferredSize( new java.awt.Dimension(450,500));
-			JETADialog dlg = JETAToolbox.invokeDialog( editView, null, "Edit Key", editView.getTextField(KeyConstants.ID_DESCRIPTION) );
+			JETADialog dlg = JETAToolbox.invokeDialog( editView, null, "Edit Key", editView.getTextField(SSHKeyConstants.ID_DESCRIPTION) );
 			if (dlg.isOk()) {
-				json.put(SERVICE, editView.getText(KeyConstants.ID_SERVICE) ); 
-				json.put(DESCRIPTION, editView.getText(KeyConstants.ID_DESCRIPTION) );
-				json.put(PUBLIC_KEY, editView.getText(KeyConstants.ID_PUBLIC_KEY ) );
-				json.put(PRIVATE_KEY, editView.getText(KeyConstants.ID_PRIVATE_KEY) );
+				json.put(SERVICE, editView.getText(SSHKeyConstants.ID_SERVICE) ); 
+				json.put(DESCRIPTION, editView.getText(SSHKeyConstants.ID_DESCRIPTION) );
+				json.put(PUBLIC_KEY, editView.getText(SSHKeyConstants.ID_PUBLIC_KEY ) );
+				json.put(PRIVATE_KEY, editView.getText(SSHKeyConstants.ID_PRIVATE_KEY) );
 				getAccountsModel().fireTableDataChanged();
 			}
 		}
@@ -58,10 +58,10 @@ public class KeyAccountsController  extends JETAController {
 	public void deleteAction() {
 		int result = JOptionPane.showConfirmDialog(null,"Delete selected account?", "Confirm", JOptionPane.YES_NO_OPTION);
 		if ( result == JOptionPane.YES_OPTION ) {
-			KeyAccountsView view = (KeyAccountsView)getView();
-			JTable table = view.getTable( KeyConstants.ID_KEY_TABLE );
+			SSHKeyAccountsView view = (SSHKeyAccountsView)getView();
+			JTable table = view.getTable( SSHKeyConstants.ID_KEY_TABLE );
 			int row = table.convertRowIndexToModel( table.getSelectedRow() );
-			((KeyTableModel)table.getModel()).deleteRow( row );
+			((SSHKeyTableModel)table.getModel()).deleteRow( row );
 		}
 	}
 }

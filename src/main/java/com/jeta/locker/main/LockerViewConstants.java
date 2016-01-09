@@ -7,8 +7,10 @@ public class LockerViewConstants {
 	public static final String ID_DELETE_WORKSHEET = "delete.worksheet";  //javax.swing.JButton
 	public static final String ID_ABOUT_LOCKER = "about.locker";  //javax.swing.JButton
 	public static final String ID_WORKSHEET_TABS = "worksheet.tabs";  //javax.swing.JButton
-	public static final String ID_SAVE = "save";
+	public static final String ID_SAVE_WORKSHEET = "save.worksheet";
+	public static final String ID_CLOSE_WORKSHEET = "close.worksheet";
 	public static final String ID_DATA_FILE = "data.file";
+	
 	// Generation End
 
 }

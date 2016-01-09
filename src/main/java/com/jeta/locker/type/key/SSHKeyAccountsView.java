@@ -40,17 +40,17 @@ import com.jeta.open.gui.framework.JETADialog;
 import com.jeta.open.gui.framework.JETAPanel;
 
 
-public class KeyAccountsView extends AbstractWorksheetView {
+public class SSHKeyAccountsView extends AbstractWorksheetView {
  
-	private KeyTableModel m_model;
+	private SSHKeyTableModel m_model;
 	private JTable m_table;
 	
-    public KeyAccountsView( KeyTableModel model ) {
+    public SSHKeyAccountsView( SSHKeyTableModel model ) {
         super(model);
 		setLayout( new BorderLayout() );
         add( new FormPanel("keyAccounts.jfrm"), BorderLayout.CENTER );
         m_model = model;
-        m_table = getTable( KeyConstants.ID_KEY_TABLE );
+        m_table = getTable( SSHKeyConstants.ID_KEY_TABLE );
         
         m_model = model;
         m_table.setModel( model ); 
@@ -65,7 +65,7 @@ public class KeyAccountsView extends AbstractWorksheetView {
      
         m_table.setComponentPopupMenu( createContextMenu() );
         m_table.setDefaultRenderer( String.class, new LockerTableCellRenderer() );
-        setController( new KeyAccountsController(this));
+        setController( new SSHKeyAccountsController(this));
     }
    
     public JTable getTable() {

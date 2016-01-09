@@ -11,7 +11,7 @@ public class LockerUtils {
 		return UUID.randomUUID().toString();
 	}
 	
-	
+		
 	public static char randomCharacter() {
 		int ival = Math.round( (float)Math.random()*2.0f);
 		switch( ival) {
@@ -28,13 +28,13 @@ public class LockerUtils {
 	}
 	
 	/**
-	 * Generates a password random alpha-numeric characters.
-	 * @param len the length of the password
+	 * Generates a random alpha-numeric character string of length N
+	 * @param N the length of the string
 	 * @return
 	 */
-	public static String generatePassword( int len ) {
+	public static String generateRandomCharacters( int N ) {
 		StringBuilder sbuilder = new StringBuilder();
-		for( int index=0; index < len; index++ ) {
+		for( int index=0; index < N; index++ ) {
 			sbuilder.append( randomCharacter() );
 		}
 		return sbuilder.toString();

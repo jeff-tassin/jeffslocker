@@ -1,6 +1,6 @@
 package com.jeta.locker.type.key;
 
-public class KeyConstants {
+public class SSHKeyConstants {
 	/** key view 
 	 */
 	public static final String ID_KEY_TABLE = "accounts.table";

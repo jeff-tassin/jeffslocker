@@ -9,33 +9,31 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import com.jeta.locker.config.LockerConfig;
+import com.jeta.locker.config.LockerKeys;
 
 public class AES {
 
 	private static int ITERATOR_COUNT = 65536;
 
-	public static byte[] encrypt( String password, String data) throws Exception {
-		return Base64.getEncoder().encode( _encrypt( password, data ) );
+	public static String encrypt( int keySize, String salt, String iv, String pepper, String password, String data) throws Exception {
+		return Base64.getEncoder().encodeToString( _encrypt( keySize, salt, iv, pepper, password, data ) );
 	}
 	
 
-	public static String decrypt( String password, byte[] encryptedText) throws Exception {
+	public static String decrypt( int keySize, String salt, String iv, String pepper, String password, String encryptedText) throws Exception {
 		byte[] data = Base64.getDecoder().decode(encryptedText);
-		return _decrypt( password, data );
+		return _decrypt( keySize, salt, iv, pepper, password, data );
 	}
 
 
-	public static byte[] _encrypt( String password, String plainText) throws Exception {
+	public static byte[] _encrypt( int keySize, String salt, String iv, String pepper, String password, String plainText) throws Exception {
 		/**
-		 * prepend password decoration to strengthen password 
-		 * The password decoration is a series of random digits stored in a local config file. 
-		 * The config file stores some keys (but not your password) for multi-factor authentication and therefore must be kept separate from your locker.data file.
+		 * prepend password pepper to strengthen password 
 		 */
-		password = LockerConfig.getPasswordPepper() + password;
+		password = pepper + password;
 
 		//get salt
-		byte[] saltBytes = LockerConfig.getSalt().getBytes("UTF-8");
+		byte[] saltBytes = salt.getBytes("UTF-8");
 		
 		// Derive the key
 		SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
@@ -43,7 +41,7 @@ public class AES {
 				password.toCharArray(), 
 				saltBytes, 
 				ITERATOR_COUNT, 
-				LockerConfig.getKeySize()
+				keySize
 				);
 		
 		SecretKey secretKey = factory.generateSecret(spec);
@@ -51,7 +49,7 @@ public class AES {
 		
 		//encrypt the message
 		Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        final IvParameterSpec ivSpec = new IvParameterSpec( LockerConfig.getInitVector().getBytes("UTF-8"));
+        final IvParameterSpec ivSpec = new IvParameterSpec( iv.getBytes("UTF-8"));
 
 		cipher.init(Cipher.ENCRYPT_MODE, secret, ivSpec);
 		byte[] encryptedBytes = cipher.doFinal(plainText.getBytes("UTF-8"));
@@ -59,23 +57,21 @@ public class AES {
 	}
 	
 	
-	public static String _decrypt( String password, byte[] encryptedText) throws Exception {
+	public static String _decrypt( int keySize, String salt, String iv, String pepper, String password, byte[] encryptedText) throws Exception {
 	
 		/**
-		 * prepend password decoration to strengthen password 
-		 * The password decoration is a series of random digits stored in a local config file. 
-		 * The config file stores some keys  (but not your password) for multi-factor authentication and therefore must be kept separate from your locker.data file.
+		 * prepend password pepper to strengthen password 
 		 */
-		password = LockerConfig.getPasswordPepper() + password;
+		password = pepper + password;
 
-		byte[] saltBytes = LockerConfig.getSalt().getBytes("UTF-8");
+		byte[] saltBytes = salt.getBytes("UTF-8");
 		// Derive the key
 		SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
 		PBEKeySpec spec = new PBEKeySpec(
 				password.toCharArray(), 
 				saltBytes, 
 				ITERATOR_COUNT, 
-				LockerConfig.getKeySize()
+				keySize
 				);
 		
 		SecretKey secretKey = factory.generateSecret(spec);
@@ -83,7 +79,7 @@ public class AES {
 		
 		// Decrypt the message
 		Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        final IvParameterSpec ivSpec = new IvParameterSpec( LockerConfig.getInitVector().getBytes("UTF-8"));
+        final IvParameterSpec ivSpec = new IvParameterSpec( iv.getBytes("UTF-8"));
 		cipher.init(Cipher.DECRYPT_MODE, secret, ivSpec);
 		
 		

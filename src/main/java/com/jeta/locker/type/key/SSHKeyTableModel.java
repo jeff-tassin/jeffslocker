@@ -10,7 +10,7 @@ import com.jeta.locker.main.Worksheet;
 import com.jeta.locker.model.AbstractWorksheetModel;
 
 
-public class KeyTableModel extends AbstractWorksheetModel {
+public class SSHKeyTableModel extends AbstractWorksheetModel {
 	
     private static String[] columnNames = {"Service Name",
     								"Description",
@@ -18,7 +18,7 @@ public class KeyTableModel extends AbstractWorksheetModel {
                                     "Private Key"
                                     };
    
-    public KeyTableModel( Worksheet worksheet ) {
+    public SSHKeyTableModel( Worksheet worksheet ) {
     	super( worksheet, columnNames );
     }
 	

@@ -4,6 +4,10 @@ public class LockerConstants {
 
 	public static final String WORKSHEETS = "WORKSHEETS";
 	public static final String ACCOUNTS = "ACCOUNTS";
+	public static final String PAYLOAD = "PAYLOAD";
+	public static final String ID = "ID";
+	public static final String KEY_SIZE = "KEY_SIZE";
+	
 	
 	public static final String WORKSHEET_TYPE = "TYPE";
 	public static final int PASSWORD_TYPE = 0;
@@ -13,12 +17,13 @@ public class LockerConstants {
 	/**
 	 * passwords
 	 */
-	public static final String ID = "ID";
 	public static final String NAME = "NAME";
 	public static final String SERVICE = "SERVICE";
 	public static final String USER_NAME = "USERNAME";
 	public static final String PASSWORD = "PASSWORD";
 	public static final String DESCRIPTION = "DESCRIPTION";
+	
+
 
 	/**
 	 * credit cards

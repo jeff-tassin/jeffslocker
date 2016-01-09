@@ -27,8 +27,8 @@ import com.jeta.locker.model.AbstractWorksheetModel;
 import com.jeta.locker.model.ImmutableTableEvent;
 import com.jeta.locker.type.cc.CreditCardTableModel;
 import com.jeta.locker.type.cc.CreditCardView;
-import com.jeta.locker.type.key.KeyTableModel;
-import com.jeta.locker.type.key.KeyAccountsView;
+import com.jeta.locker.type.key.SSHKeyTableModel;
+import com.jeta.locker.type.key.SSHKeyAccountsView;
 import com.jeta.locker.type.password.PasswordView;
 import com.jeta.locker.view.AbstractWorksheetView;
 import com.jeta.open.gui.framework.JETAPanel;
@@ -40,10 +40,12 @@ import static com.jeta.locker.common.LockerConstants.*;
 public class LockerView extends JETAPanel {
 	private JTabbedPane m_tabs;
 	private LockerModel m_model;
- 
-    public LockerView( LockerModel model ) {
+	private LockerMain  m_main;
+
+    public LockerView( LockerMain main, LockerModel model ) {
         super(new BorderLayout());
-        m_model = model;
+        m_main = main;
+    	m_model = model;
         add( new FormPanel( "lockerMain.jfrm" ));
         m_tabs = getTabbedPane( LockerViewConstants.ID_WORKSHEET_TABS );
         TabTitleEditListener listener = new TabTitleEditListener(m_tabs);
@@ -52,14 +54,20 @@ public class LockerView extends JETAPanel {
         for( Worksheet worksheet : model.getWorksheets() ) {
         	addTab( worksheet );
         }
-        setController( new LockerController(this) );
         setText( LockerViewConstants.ID_DATA_FILE, "File: " + model.getFilePath() );
+
+        setController( new LockerController(this) );
+        updateComponents(null);
+
     }
     
     public LockerModel getModel() {
     	return m_model;
     }
  
+    public LockerMain getMain() {
+    	return m_main;
+    }
     public void addTab( Worksheet worksheet ) {
     	if ( worksheet.getType() == PASSWORD_TYPE ) {
     		PasswordTableModel model = new PasswordTableModel( worksheet );
@@ -70,8 +78,8 @@ public class LockerView extends JETAPanel {
     		m_tabs.add( worksheet.getName(), new CreditCardView( model ) );
     		model.addTableModelListener( evt -> { tableChanged(evt); } );
     	} else if( worksheet.getType() == KEY_TYPE ) {
-    		KeyTableModel model = new KeyTableModel( worksheet );
-    		m_tabs.add( worksheet.getName(), new KeyAccountsView( model ) );
+    		SSHKeyTableModel model = new SSHKeyTableModel( worksheet );
+    		m_tabs.add( worksheet.getName(), new SSHKeyAccountsView( model ) );
     		model.addTableModelListener( evt -> { tableChanged(evt); } );
     	}
     }
@@ -80,11 +88,10 @@ public class LockerView extends JETAPanel {
     	if ( !(evt instanceof ImmutableTableEvent) ) {
     		AbstractWorksheetModel model = (AbstractWorksheetModel)evt.getSource();
     		model.getWorksheet().setModified(true);
-    		enableComponent( LockerViewConstants.ID_SAVE, true );
+    		enableComponent( LockerViewConstants.ID_SAVE_WORKSHEET, true );
     	}
     }
-  
-   
+     
     private Worksheet getWorksheetAt( int tabIndex ) {
     	Object lview = m_tabs.getComponentAt( tabIndex );
     	if ( lview instanceof AbstractWorksheetView ) {
