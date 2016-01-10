@@ -2,6 +2,7 @@ package com.jeta.locker.main;
 
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -9,7 +10,9 @@ import java.io.File;
 import java.util.EventObject;
 
 import javax.swing.JComboBox;
+import javax.swing.JList;
 import javax.swing.SwingUtilities;
+import javax.swing.plaf.basic.BasicComboBoxRenderer;
 
 import com.jeta.forms.components.panel.FormPanel;
 import com.jeta.locker.common.LockerException;
@@ -17,10 +20,8 @@ import com.jeta.locker.common.StringUtils;
 import com.jeta.locker.config.AppConfig;
 import com.jeta.locker.create.CreateWizardDialog;
 import com.jeta.open.gui.framework.JETAController;
-import com.jeta.open.gui.framework.JETADialog;
 import com.jeta.open.gui.framework.JETAPanel;
 import com.jeta.open.gui.framework.UIDirector;
-import com.jeta.open.gui.utils.JETAToolbox;
 
 
 public class AuthenticateView extends JETAPanel {
@@ -40,18 +41,19 @@ public class AuthenticateView extends JETAPanel {
 	
 	public AuthenticateView( LockerMain main ) {
 		m_main = main;
-		m_form = new FormPanel( "openLocker.jfrm" );
+		m_form = new FormPanel( "loginBarrier.jfrm" );
 		setLayout( new BorderLayout() );
 		add( m_form, BorderLayout.CENTER );
 		m_form.setText(ID_PASSWORD_MESSAGE, "" );
 		
-		JComboBox<String> cbox = (JComboBox<String>)m_form.getComboBox(ID_RECENT_FILES);
-		for( String file : AppConfig.getMostRecentFiles() ) {
-			if ( new File(file).isFile() ) {
+		JComboBox<File> cbox = (JComboBox<File>)m_form.getComboBox(ID_RECENT_FILES);
+		for( String filePath : AppConfig.getMostRecentFiles() ) {
+			File file = new File(filePath);
+			if ( file.isFile() ) {
 				cbox.addItem(file);
 			}
-			
 		}
+		cbox.setRenderer( new FilenameRenderer() );
 		setController( new Controller() );
 		setUIDirector( new AuthenticateViewUIDirector() );
 		updateComponents(null);
@@ -109,8 +111,8 @@ public class AuthenticateView extends JETAPanel {
 		
 		private void openLocker() {
 			try {
-				String path = String.valueOf( m_form.getComboBox(ID_RECENT_FILES).getEditor().getItem() );
-				m_main.openLocker( new LockerModel( path, getPassword() ) );
+				File selectedFile = (File)m_form.getComboBox(ID_RECENT_FILES).getSelectedItem();
+				m_main.openLocker( new LockerModel( selectedFile.getAbsolutePath(), getPassword() ) );
 			} catch( LockerException e ) {
 				m_form.setText(ID_PASSWORD_MESSAGE, e.getMessage() );
 			}
@@ -133,5 +135,16 @@ public class AuthenticateView extends JETAPanel {
 			dlg.showCenter();
 		}*/
 	}
+	
+	public static class FilenameRenderer extends BasicComboBoxRenderer {
+        @Override
+        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            File file = (File)value;
+            setText( file.getName() );
+            return this;
+        }
+    }
+
 	
 }

@@ -25,6 +25,7 @@ import com.jeta.locker.common.LockerException;
 import com.jeta.locker.common.StringUtils;
 import com.jeta.locker.config.LockerKeys;
 import com.jeta.locker.crypto.AES;
+import com.jeta.locker.io.LockerIO;
 
 public class LockerModel {
 
@@ -76,67 +77,22 @@ public class LockerModel {
 	}
 	
 	private void readData( String filePath ) throws LockerException {
-		FileInputStream fis = null;
 		try {
+			LockerIO.ReadResult result = LockerIO.read( filePath, getPassword() );
+			m_keys = result.getKeys();
+			JSONArray worksheets = result.getJSON().optJSONArray(WORKSHEETS);
 			List<Worksheet> results = new ArrayList<Worksheet>();
-			File dataFile = new File( filePath );
-			if ( !dataFile.isFile() ) {
-				throw new LockerException( filePath + " not found.");
-			}
-			
-			fis = new FileInputStream(dataFile);
-			byte[] data = new byte[(int)dataFile.length()];
-			fis.read(data);
-
-			/**
-			 * 1. convert file to JSON. 
-			 * 2. get the locker ID.
-			 * 3. load the keys
-			 * 4. using the keys and password, decrypt the locker payload 
-			 */
-			JSONObject locker = new JSONObject( new String(data, "UTF-8") );
-			String id = locker.getString(ID);
-			int keySize = locker.getInt(KEY_SIZE);
-			
-			System.out.println( "locker model loaded id: " + id + " keysize: " + keySize );
-			
-			m_keys = new LockerKeys( id, keySize );
-			
-			String payload = "{}";
-			try {
-				payload = AES.decrypt( m_keys.getKeySize(), 
-						m_keys.getSalt(), 
-						m_keys.getInitVector(), 
-						m_keys.getPepper(), 
-						getPassword(), 
-						locker.getString(PAYLOAD) );
-			} catch( InvalidKeyException e ) {
-				/**
-				 * this exception can be called if you encrypted with 256 bits but are using 128 bit defaults that
-				 * come with JDK.
-				 */
-				throw new LockerException( e.getMessage() + "\nCheck that you have installed 256bit extensions.");
-			} catch( Exception e ) {
-				throw new LockerException( "Invalid password.");
-			}
-				
-								
-			JSONObject json = new JSONObject(payload);
-			JSONArray worksheets = json.optJSONArray(WORKSHEETS);
 			if ( worksheets != null ) {
 				for( int index=0; index < worksheets.length(); index++ ) {
 					results.add( Worksheet.fromJSON( worksheets.getJSONObject(index)));
 				}
 			}
-			fis.close();
 			m_worksheets = results;
 			for( Worksheet ws : m_worksheets ) {
 				ws.setModified(false);
 			}	
 		} catch( Exception e ) {
 			throw LockerException.create( e );
-		} finally {
-			FileUtils.close( fis ); 
 		}
 	}
 	
@@ -158,7 +114,15 @@ public class LockerModel {
 			/**
 			 * now write data file
 			 */
-			writeData( m_filePath );
+
+			JSONObject json = new JSONObject();
+			JSONArray passwords = new JSONArray();
+			for( Worksheet sheet : m_worksheets ) {
+				passwords.put( sheet.toJSON() );
+			}
+			json.put( WORKSHEETS, passwords );
+			LockerIO.write( m_filePath, json, getPassword(), m_keys );
+
 			for( Worksheet ws : m_worksheets ) {
 				ws.setModified(false);
 			}
@@ -166,31 +130,6 @@ public class LockerModel {
 			throw LockerException.create( e );
 		}
 	}
-	
-	public void writeData( String dataFile ) throws LockerException {
-		try {
 
-			JSONObject payload = new JSONObject();
-			JSONArray passwords = new JSONArray();
-			for( Worksheet sheet : m_worksheets ) {
-				passwords.put( sheet.toJSON() );
-			}
-			payload.put( WORKSHEETS, passwords );
-			payload.put( "JEFFS_LOCKER", "version 1.0" );
-			String encryptedPayload = AES.encrypt( m_keys.getKeySize(), m_keys.getSalt(), m_keys.getInitVector(), m_keys.getPepper(), getPassword(), payload.toString() );
-			
-			
-			JSONObject locker = new JSONObject();
-			locker.put( ID, m_keys.getId() );
-			locker.put( KEY_SIZE, m_keys.getKeySize() ); 
-			locker.put( PAYLOAD, encryptedPayload );
-			
-			FileOutputStream fis = new FileOutputStream(dataFile);
-			fis.write( locker.toString().getBytes("UTF-8") );
-			fis.close();
-		} catch( Exception e ) {
-			throw new LockerException("Unable to read file: " + dataFile );
-		}
-	}
 	
 }
