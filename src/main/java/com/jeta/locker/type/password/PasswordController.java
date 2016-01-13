@@ -1,5 +1,14 @@
 package com.jeta.locker.type.password;
 
+import static com.jeta.locker.common.LockerConstants.DESCRIPTION;
+import static com.jeta.locker.common.LockerConstants.PRIVATE_KEY;
+import static com.jeta.locker.common.LockerConstants.PUBLIC_KEY;
+import static com.jeta.locker.common.LockerConstants.SERVICE;
+import static com.jeta.locker.type.password.PasswordConstants.ID_DESCRIPTION;
+import static com.jeta.locker.type.password.PasswordConstants.ID_PASSWORD;
+import static com.jeta.locker.type.password.PasswordConstants.ID_SERVICE_NAME;
+import static com.jeta.locker.type.password.PasswordConstants.ID_USER_NAME;
+
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -16,7 +25,9 @@ import org.json.JSONObject;
 import com.jeta.forms.components.panel.FormPanel;
 import com.jeta.locker.common.LockerConstants;
 import com.jeta.locker.common.LockerUtils;
+
 import com.jeta.locker.type.key.SSHKeyConstants;
+
 import com.jeta.open.gui.framework.JETAController;
 import com.jeta.open.gui.framework.JETADialog;
 import com.jeta.open.gui.utils.JETAToolbox;
@@ -28,6 +39,7 @@ public class PasswordController  extends JETAController {
 		assignAction( PasswordConstants.ID_GENERATE_PASSWORD, evt -> generatePassword() );
 		assignAction( PasswordConstants.ID_ADD_ACCOUNT, evt -> addPasswordAccount() );
 		assignAction( PasswordConstants.ID_SHOW_PASSWORDS, evt -> showPasswords() );
+		assignAction( PasswordConstants.ID_EDIT_ACCOUNT, evt-> editAccount() );
 		assignListener( PasswordConstants.ID_ACCOUNTS_TABLE, new ListSelectionListener() {
         	public void valueChanged(ListSelectionEvent e) {
         	//	uiChanged();
@@ -39,6 +51,26 @@ public class PasswordController  extends JETAController {
 		PasswordView view = (PasswordView)getView();
 		JTable table = view.getTable( SSHKeyConstants.ID_KEY_TABLE );
 		return (PasswordTableModel)table.getModel();
+	}
+	
+	
+	public void editAccount() {
+		PasswordView view = (PasswordView)getView();
+		JSONObject json = view.getSelectedAccount();
+		if ( json != null ) {
+			PasswordEditView editView = new PasswordEditView(json);
+			editView.setPreferredSize( new java.awt.Dimension(500,350));
+			JETADialog dlg = JETAToolbox.invokeDialog( editView, null, "Edit Password Account", null );
+			if (dlg.isOk()) {
+				/*
+				json.put(LockerConstants.SERVICE), editView.getText( ID_SERVICE_NAME ) );
+				json.put(LockerConstants.USER_NAME), editView.getText( ID_USER_NAME ) );
+			  	json.put(LockerConstants.PASSWORD), editView.getText( ID_PASSWORD ) ); 
+			  	json.put(LockerConstants.DESCRIPTION) ), editVie.getText( ID_DESCRIPTION )); 
+				getAccountsModel().fireTableDataChanged();
+				*/
+			}
+		}
 	}
 	
 	public void showPasswords() {

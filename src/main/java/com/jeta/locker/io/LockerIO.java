@@ -101,7 +101,7 @@ public class LockerIO {
 			String encryptedPayload = AES.encrypt( keys.getKeySize(), 
 					keys.getSalt(),
 					keys.getInitVector(),
-					keys.getPepper(), 
+					keys.getPepper(),  
 					password, 
 					payload.toString() );
 			

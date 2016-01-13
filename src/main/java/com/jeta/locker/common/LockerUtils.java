@@ -1,29 +1,23 @@
 package com.jeta.locker.common;
 
-import java.awt.Font;
-import java.awt.GraphicsEnvironment;
-import java.io.InputStream;
 import java.util.UUID;
 
 public class LockerUtils {
 	
+	private static String CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	private static String SYMBOLS_AND_CHARS = "{|}~!#$%&()*+,-.:;<=>?@[]^_" + CHARS;
+			
 	public static String generateId() {
 		return UUID.randomUUID().toString();
 	}
-	
 		
-	public static char randomCharacter() {
-		int ival = Math.round( (float)Math.random()*2.0f);
-		switch( ival) {
-		case 0: // digits
-			int dval = Math.round( (float)Math.random()*9.0f);
-			return (char)(48+dval);
-		case 1: // upper case
-			int cval = Math.round( (float)Math.random()*25.0f);
-			return (char)(65+cval);
-		default: // lower case
-			cval = Math.round( (float)Math.random()*25.0f);
-			return (char)(97+cval);		
+	public static char randomCharacter(boolean includeSymbols) {
+		if ( includeSymbols ) {
+			int ival = (int)(Math.random()*SYMBOLS_AND_CHARS.length());
+			return SYMBOLS_AND_CHARS.charAt(ival);
+		} else {
+			int ival = (int)(Math.random()*CHARS.length());
+			return CHARS.charAt(ival);
 		}	
 	}
 	
@@ -33,11 +27,19 @@ public class LockerUtils {
 	 * @return
 	 */
 	public static String generateRandomCharacters( int N ) {
+		return generateRandomCharacters( N, false );
+	}
+	
+	public static String generateRandomCharacters( int N, boolean includeSymbols ) {
 		StringBuilder sbuilder = new StringBuilder();
 		for( int index=0; index < N; index++ ) {
-			sbuilder.append( randomCharacter() );
+			sbuilder.append( randomCharacter(includeSymbols) );
 		}
 		return sbuilder.toString();
+	}
+	
+	public static boolean isDebug() {
+		return "true".equals(System.getProperty("locker.debug"));
 	}
 	
 }

@@ -15,6 +15,8 @@ import java.awt.event.MouseEvent;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
@@ -41,13 +43,22 @@ public class LockerView extends JETAPanel {
 	private JTabbedPane m_tabs;
 	private LockerModel m_model;
 	private LockerMain  m_main;
+	private JPanel      m_sheetsPanel;
+	private JLabel		m_infoLabel;
+	
 
     public LockerView( LockerMain main, LockerModel model ) {
         super(new BorderLayout());
         m_main = main;
     	m_model = model;
         add( new FormPanel( "lockerMain.jfrm" ));
-        m_tabs = getTabbedPane( LockerViewConstants.ID_WORKSHEET_TABS );
+        m_sheetsPanel = (JPanel)getComponentByName( LockerViewConstants.ID_WORKSHEETS_PANEL );
+        m_sheetsPanel.setLayout( new BorderLayout() );
+        
+        m_infoLabel = new JLabel("No worksheets");
+        m_infoLabel.setBorder( BorderFactory.createEmptyBorder( 10, 10, 10, 10));
+        
+        m_tabs = new JTabbedPane();
         TabTitleEditListener listener = new TabTitleEditListener(m_tabs);
         m_tabs.addChangeListener(listener);
         m_tabs.addMouseListener(listener);
@@ -55,12 +66,34 @@ public class LockerView extends JETAPanel {
         	addTab( worksheet );
         }
         setText( LockerViewConstants.ID_DATA_FILE, "File: " + model.getFilePath() );
-
         setController( new LockerController(this) );
+        setUIDirector( new LockerUIDirector(this) );
+        
+        configureView();
         updateComponents(null);
-
     }
     
+	public JTabbedPane getTabs() {
+		return m_tabs;
+	}
+
+    private void configureView() {
+    	if ( m_tabs.getTabCount() == 0 ) {
+    		if ( m_sheetsPanel.getComponentCount() == 0 || m_sheetsPanel.getComponent(0) != m_infoLabel ) {
+    			m_sheetsPanel.removeAll();
+        		m_sheetsPanel.add( m_infoLabel, BorderLayout.NORTH );
+        		m_sheetsPanel.setOpaque(true);
+    		}
+    	} else {
+    		if (  m_sheetsPanel.getComponentCount() == 0 || m_tabs.getComponent(0) != m_tabs ) {
+    			m_sheetsPanel.removeAll();
+    			m_sheetsPanel.add( m_tabs, BorderLayout.CENTER );
+        		m_sheetsPanel.setOpaque(false);
+    		}
+    	}
+    	m_sheetsPanel.revalidate();
+    }
+
     public LockerModel getModel() {
     	return m_model;
     }
@@ -82,13 +115,12 @@ public class LockerView extends JETAPanel {
     		m_tabs.add( worksheet.getName(), new SSHKeyAccountsView( model ) );
     		model.addTableModelListener( evt -> { tableChanged(evt); } );
     	}
+    	configureView();
     }
     
     private void tableChanged(TableModelEvent evt) {
     	if ( !(evt instanceof ImmutableTableEvent) ) {
-    		AbstractWorksheetModel model = (AbstractWorksheetModel)evt.getSource();
-    		model.getWorksheet().setModified(true);
-    		enableComponent( LockerViewConstants.ID_SAVE_WORKSHEET, true );
+    		updateComponents(null);
     	}
     }
      

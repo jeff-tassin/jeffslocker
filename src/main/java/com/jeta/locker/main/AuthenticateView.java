@@ -1,6 +1,9 @@
 package com.jeta.locker.main;
 
 
+import static com.jeta.locker.create.CreateWizardConstants.ID_ERROR;
+import static com.jeta.locker.create.CreateWizardConstants.ID_FILENAME;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -9,15 +12,19 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.EventObject;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 
 import com.jeta.forms.components.panel.FormPanel;
 import com.jeta.locker.common.LockerException;
 import com.jeta.locker.common.StringUtils;
-import com.jeta.locker.config.AppConfig;
+import com.jeta.locker.config.AppProperties;
 import com.jeta.locker.create.CreateWizardDialog;
 import com.jeta.open.gui.framework.JETAController;
 import com.jeta.open.gui.framework.JETAPanel;
@@ -33,6 +40,7 @@ public class AuthenticateView extends JETAPanel {
 	public static final String ID_RECENT_FILES = "recent.files";  //javax.swing.JComboBox
 	public static final String ID_ABOUT = "about";  //javax.swing.JButton
 	public static final String ID_OPEN = "open.file";  //javax.swing.JButton
+	public static final String ID_CHOOSE_FILE = "choose.file";  //javax.swing.JButton
 	public static final String ID_PASSWORD_MESSAGE = "password.message";
 	// Generation End
 
@@ -47,7 +55,8 @@ public class AuthenticateView extends JETAPanel {
 		m_form.setText(ID_PASSWORD_MESSAGE, "" );
 		
 		JComboBox<File> cbox = (JComboBox<File>)m_form.getComboBox(ID_RECENT_FILES);
-		for( String filePath : AppConfig.getMostRecentFiles() ) {
+		cbox.removeAllItems();
+		for( String filePath : AppProperties.getMostRecentFiles() ) {
 			File file = new File(filePath);
 			if ( file.isFile() ) {
 				cbox.addItem(file);
@@ -81,9 +90,9 @@ public class AuthenticateView extends JETAPanel {
 		Controller() {
 			super(AuthenticateView.this);
 			assignAction(ID_SHOW_PASSWORD, evt->showPassword());
-			//assignAction(ID_ABOUT, evt->showAbout());
 			assignAction(ID_OPEN, evt->openLocker() );
 			assignAction(ID_CREATE_NEW, evt->createNew() );
+			assignAction( ID_CHOOSE_FILE, evt->chooseFile() );
 			m_form.getPasswordField( ID_PASSWORD ).addKeyListener( new KeyAdapter() {             
 				@Override             
 				public void keyPressed(KeyEvent evt) {
@@ -94,11 +103,9 @@ public class AuthenticateView extends JETAPanel {
 					/**
 					 * call invokeLater to allow key processing to complete
 					 */
-					SwingUtilities.invokeLater( new Runnable() {
-						public void run() {
+					SwingUtilities.invokeLater( () -> {
 							AuthenticateView.this.updateComponents(null);
-						}
-					});
+						});
 				}
 				
 			});
@@ -118,30 +125,57 @@ public class AuthenticateView extends JETAPanel {
 			}
 		}
 		
+		private void chooseFile() {
+			 JFileChooser chooser = new JFileChooser();
+			 chooser.setFileFilter( new FileNameExtensionFilter("Locker files", "jlocker" ) );
+			 int returnVal = chooser.showOpenDialog( (Component)getView() );
+			 if(returnVal == JFileChooser.APPROVE_OPTION) {
+				 File lockerFile = chooser.getSelectedFile();
+				 
+				 JComboBox<File> cbox = (JComboBox<File>)m_form.getComboBox(ID_RECENT_FILES);
+				 for( int index=0; index < cbox.getItemCount(); index++ ) {
+					 if ( cbox.getItemAt(index).equals(lockerFile) ) {
+						 cbox.removeItemAt(index);
+					 }
+				 }
+				 if ( cbox.getItemCount() == 0 ) {
+					 cbox.addItem(lockerFile);
+				 } else {
+					 cbox.insertItemAt(lockerFile, 0);
+				 }
+				 cbox.setSelectedIndex(0);
+			 }
+		}
 		private void createNew() {
 			CreateWizardDialog dlg = new CreateWizardDialog(null);
-			dlg.setSize( new Dimension(750,550));
 			dlg.showCenter();
 		}
-		/*
-		private void showAbout() {
-			JETADialog dlg = (JETADialog) JETAToolbox.createDialog(JETADialog.class,null, true);
-			AboutView view = new AboutView();
-			dlg.setPrimaryPanel(view);
-			dlg.setTitle( "About" );
-			dlg.pack();
-			dlg.showOkButton(false);
-			dlg.setCloseText("Close");
-			dlg.showCenter();
-		}*/
 	}
 	
 	public static class FilenameRenderer extends BasicComboBoxRenderer {
+			private static ImageIcon m_lockIcon = null;
+		static {
+			try {
+				m_lockIcon = new ImageIcon(ImageIO.read( ClassLoader.getSystemResource( "images/16x16/locked59.png" ) ));
+			} catch( Exception e ) {
+				// ignore
+			}
+		}
         @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            if ( m_lockIcon != null ) {
+            	this.setIcon(m_lockIcon);
+            }
             File file = (File)value;
-            setText( file.getName() );
+            if ( file != null ) {
+            	String fname = file.getName();
+            	int pos = fname.lastIndexOf('.');
+            	if ( pos > 0 ) {
+            		fname = fname.substring(0, pos);
+            	}
+            	setText( fname );
+            }
             return this;
         }
     }

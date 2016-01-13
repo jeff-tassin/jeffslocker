@@ -23,6 +23,8 @@ public class SSHKeyEditView extends JETAPanel {
 		getTextField(SSHKeyConstants.ID_DESCRIPTION).setText( json.optString(DESCRIPTION));
 		getTextComponent(SSHKeyConstants.ID_PUBLIC_KEY).setText( json.optString(PUBLIC_KEY));
 		getTextComponent(SSHKeyConstants.ID_PRIVATE_KEY).setText( json.optString(PRIVATE_KEY));
+		getTextComponent(SSHKeyConstants.ID_PUBLIC_KEY).setCaretPosition(0);
+		getTextComponent(SSHKeyConstants.ID_PRIVATE_KEY).setCaretPosition(0);
 	}
 
 }

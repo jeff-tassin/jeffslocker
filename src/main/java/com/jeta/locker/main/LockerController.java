@@ -28,7 +28,7 @@ public class LockerController extends JETAController {
 	
 	public void aboutLocker() {
 		JETADialog dlg = (JETADialog) JETAToolbox.createDialog(JETADialog.class,null, true);
-		AboutView view = new AboutView();
+		AboutView view = new AboutView( getModel() );
 		dlg.setPrimaryPanel(view);
 		dlg.setTitle( "About" );
 		dlg.pack();
@@ -37,9 +37,13 @@ public class LockerController extends JETAController {
 		dlg.showCenter();
 	}
 
+	public LockerModel getModel() {
+		return ((LockerView)getView()).getModel();
+	}
+	
 	public void saveLocker() {
 		try {
-			((LockerView)getView()).getModel().save();
+			getModel().save();
 		} catch( Exception e ) {
 			JOptionPane.showMessageDialog(null,  "Error: " + e.getLocalizedMessage());
 		}
@@ -49,7 +53,7 @@ public class LockerController extends JETAController {
 		int type = invokeWorksheetDialog();
 		if ( type >= 0 ) {
 			LockerView view = (LockerView)getView();
-			JTabbedPane tabs = view.getTabbedPane( LockerViewConstants.ID_WORKSHEET_TABS );
+			JTabbedPane tabs = view.getTabs();
 			String name =  "Worksheet " + (tabs.getTabCount() + 1);
 			Worksheet worksheet = new Worksheet( LockerUtils.generateId(), name, type);
 			view.addTab(worksheet); 
@@ -59,7 +63,7 @@ public class LockerController extends JETAController {
 	}
 
 	public void closeWorksheet() {
-		LockerModel model = ((LockerView)getView()).getModel();
+		LockerModel model = getModel();
 		if ( model !=null && model.isModified() ) {
 			int result = JOptionPane.showConfirmDialog(null,"Locker data has changed. Save to database?", "Confirm", JOptionPane.YES_NO_OPTION);
 			if ( result == JOptionPane.YES_OPTION ) {

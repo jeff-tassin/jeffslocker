@@ -19,13 +19,14 @@ public class PasswordGeneratorView extends JETAPanel {
 	public static final String ID_24_CHARS = "24_chars";  //javax.swing.JRadioButton
 	public static final String ID_16_CHARS = "16_chars";  //javax.swing.JRadioButton
 	public static final String ID_32_CHARS = "32_chars";  //javax.swing.JRadioButton
+	public static final String ID_INCLUDE_SYMBOLS = "include.symbols";  //javax.swing.JCheckBox
 	// Generation End
 
 
 	public PasswordGeneratorView() {
 		setLayout( new BorderLayout() );
 		FormPanel panel = new FormPanel( "passwordGenerator.jfrm" );		
-		panel.setPreferredSize( new java.awt.Dimension(300,200));
+		panel.setPreferredSize( new java.awt.Dimension(300,250));
 		add(panel, BorderLayout.CENTER);
 		setController( new Controller(this));
 		getTextField(ID_PASSWORD).setText(LockerUtils.generateRandomCharacters(8));
@@ -34,44 +35,34 @@ public class PasswordGeneratorView extends JETAPanel {
 	public String getPassword() {
 		return getTextField(ID_PASSWORD).getText();
 	}
+
+	private int getLength() {
+		if ( isSelected(ID_8_CHARS) ) {
+			return 8;
+		} else if ( isSelected(ID_16_CHARS ) ) {
+			return 16;
+		} else if ( isSelected(ID_24_CHARS ) ) {
+			return 24;
+		} else {
+			return 32;
+		}
+	}
 	
 	public class Controller extends JETAController {
-
 		public Controller(JETAContainer view) {
 			super(view);
-			assignAction( ID_8_CHARS, new PasswordSizeAction() );
-			assignAction( ID_16_CHARS, new PasswordSizeAction() );
-			assignAction( ID_24_CHARS, new PasswordSizeAction() );
-			assignAction( ID_32_CHARS, new PasswordSizeAction() );
+			assignAction( ID_8_CHARS, e -> passwordSize(8) );
+			assignAction( ID_16_CHARS, e -> passwordSize(16) );
+			assignAction( ID_24_CHARS, e -> passwordSize(24) );
+			assignAction( ID_32_CHARS, e -> passwordSize(32) );
+			assignAction( ID_INCLUDE_SYMBOLS, e->passwordSize( getLength()));
 		}
 		
 	}
 	
-	public class PasswordSizeAction implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			
-			JComponent comp = (JComponent)e.getSource();
-			int len = 24;
-			switch( comp.getName() ) {
-			case ID_8_CHARS:
-				len = 8;
-				break;
-			case ID_16_CHARS:
-				len = 16;
-				break;
-			case ID_24_CHARS:
-				len = 24;
-				break;
-			case ID_32_CHARS:
-				len = 32;
-				break;
-			default:
-				len = 16;
-				break;
-			}
-			PasswordGeneratorView.this.getTextField(ID_PASSWORD).setText(LockerUtils.generateRandomCharacters(len));
-		}
-		
+	public void passwordSize( int N ) {
+		boolean includeSymbols = isSelected( ID_INCLUDE_SYMBOLS );
+		PasswordGeneratorView.this.getTextField(ID_PASSWORD).setText(LockerUtils.generateRandomCharacters(N, includeSymbols));
 	}
+		
 }

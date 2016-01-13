@@ -1,25 +1,19 @@
 package com.jeta.locker.main;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import javax.swing.UIManager;
 import com.jeta.locker.common.LockerException;
 import com.jeta.locker.common.StringUtils;
-import com.jeta.locker.config.LockerKeys;
-import com.jeta.open.gui.framework.JETADialog;
 import com.jeta.open.gui.utils.JETAToolbox;
 
 public class LockerMain {
 	private AuthenticateView m_loginBarrier;
+	private LockerView       m_view;
 	private JFrame m_frame;
 	
 	
@@ -58,10 +52,9 @@ public class LockerMain {
 	
 	public void openLocker( LockerModel model ) {
 		if ( m_loginBarrier != null ) {
-			//m_frame.remove( m_loginBarrier );
 			m_frame.getContentPane().removeAll();
-
-			m_frame.getContentPane().add( new LockerView( this, model ), BorderLayout.CENTER);
+			m_view =  new LockerView( this, model );
+			m_frame.getContentPane().add(m_view, BorderLayout.CENTER);
 			m_frame.getContentPane().revalidate();
 			m_loginBarrier = null;
 		}
@@ -72,6 +65,7 @@ public class LockerMain {
 		m_loginBarrier = new AuthenticateView(this);
 		m_frame.getContentPane().add( m_loginBarrier, BorderLayout.CENTER);
 		m_frame.revalidate();
+		m_view = null;
 	}
 
 	public static void main(String[] args ) {
@@ -85,18 +79,16 @@ public class LockerMain {
 	private class WindowController extends WindowAdapter {
 		@Override
 		public void windowClosing(WindowEvent evt) {
-			/*
-			if ( m_locker != null && m_locker.isModified() ) {
+			if ( m_view != null && m_view.getModel().isModified() ) {
 				int result = JOptionPane.showConfirmDialog(null,"Locker data has changed. Save to database?", "Confirm", JOptionPane.YES_NO_OPTION);
 				if ( result == JOptionPane.YES_OPTION ) {
 					try {
-						m_locker.save();
+						m_view.getModel().save();
 					} catch( Exception e ) {
 						JOptionPane.showMessageDialog(null,  "Error: " + e.getLocalizedMessage());
 					}
 				}
 			}
-			*/
 		}
 	}
 }

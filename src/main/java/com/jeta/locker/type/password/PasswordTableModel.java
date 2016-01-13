@@ -69,6 +69,7 @@ public class PasswordTableModel extends AbstractWorksheetModel {
         	data.put( DESCRIPTION, sval );
         	break;
         }
+        getWorksheet().setModified(true);
         fireTableCellUpdated(row, col);
      }
     

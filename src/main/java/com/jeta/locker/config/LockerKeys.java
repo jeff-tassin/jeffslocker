@@ -39,22 +39,39 @@ public class LockerKeys {
 	
 	private String m_id;
 	private int m_keySize;
-	private Properties m_keys;
+	private String m_iv;
+	private String m_salt;
+	private String m_pepper;
 	
+
 	public LockerKeys( String id, int keySize ) throws LockerException {
 		m_id = id;
 		m_keySize = keySize;
-		String keyFile = StringUtils.buildFilePath( AppConfig.getConfigDirectory(), "jlocker." + id + ".keys" );
+		String keyFile = StringUtils.buildFilePath( AppProperties.getConfigDirectory(), id + ".jkeys" );
 		try {
 			Properties props = new Properties();
 			FileInputStream is = new FileInputStream( keyFile );
 			props.load(is);
 			is.close();
-			m_keys = props;
+			m_iv = StringUtils.safeTrim(props.getProperty( INIT_VECTOR ));
+			m_salt = StringUtils.safeTrim(props.getProperty( SALT ));
+			m_pepper = StringUtils.safeTrim(props.getProperty( PEPPER ));
 		} catch( Exception e ) {
 			e.printStackTrace();
 			throw LockerException.create(e);
 		}
+	}
+	
+	public LockerKeys( String id, int keySize, String iv, String salt, String pepper ) {
+		m_id = id;
+		m_keySize = keySize;
+		m_iv = iv;
+		m_salt = salt;
+		m_pepper = pepper;
+	}
+	
+	public String getFilePath() {
+		return StringUtils.buildFilePath( AppProperties.getConfigDirectory(), m_id + ".jkeys" );
 	}
 	
 	public String getId() {
@@ -75,14 +92,14 @@ public class LockerKeys {
 	 * @see https://en.wikipedia.org/wiki/Initialization_vector
 	 */
 	public String getInitVector() {
-		return m_keys.getProperty( INIT_VECTOR );
+		return m_iv;
 	}
 	
 	/**
 	 * @see https://en.wikipedia.org/wiki/Salt_(cryptography)
 	 */
 	public String getSalt() {
-		return m_keys.getProperty( SALT );
+		return m_salt;
 	}
 	
 	/**
@@ -90,7 +107,7 @@ public class LockerKeys {
 	 * to your authentication.
 	 */
 	public  String getPepper() {
-		return m_keys.getProperty( PEPPER );
+		return m_pepper;
 	}
 	
 }

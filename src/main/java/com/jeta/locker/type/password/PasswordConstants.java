@@ -10,4 +10,11 @@ public class PasswordConstants {
 	public static final String ID_SHOW_PASSWORDS = "show.passwords";  //javax.swing.JButton
 	// Generation End
 
+	// Generation Start
+	public static final String ID_PASSWORD = "password";  //javax.swing.JPasswordField
+	public static final String ID_SHOW_PASSWORD = "show.password";  //javax.swing.JCheckBox
+	public static final String ID_SERVICE_NAME = "service.name";  //javax.swing.JTextField
+	public static final String ID_USER_NAME = "user.name";  //javax.swing.JTextField
+	public static final String ID_DESCRIPTION = "description";  //javax.swing.JTextArea
+	// Generation End
 }

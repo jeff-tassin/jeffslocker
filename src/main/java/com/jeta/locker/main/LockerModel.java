@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import com.jeta.locker.common.FileUtils;
 import com.jeta.locker.common.LockerException;
 import com.jeta.locker.common.StringUtils;
+import com.jeta.locker.config.AppProperties;
 import com.jeta.locker.config.LockerKeys;
 import com.jeta.locker.crypto.AES;
 import com.jeta.locker.io.LockerIO;
@@ -37,17 +38,29 @@ public class LockerModel {
 	private String m_filePath;
 	private List<Worksheet>  m_worksheets = new ArrayList<Worksheet>();
 	
+	private LockerModel() {
+		
+	}
 	
 	public LockerModel( String dataFile, String password ) throws LockerException {
 		System.out.println( "LockerModel.loading data file: " + dataFile );
 		m_filePath = dataFile;
 		m_password = password;
-	
 		try {
 			readData(dataFile);
+			AppProperties.addMostRecentFile( dataFile );
 		} catch( Exception e ) {
 			throw LockerException.create( e );
 		}
+	}
+	
+	public static LockerModel createFile( String filePath, String password, LockerKeys keys ) throws LockerException {
+		LockerModel model = new LockerModel();
+		model.m_keys = keys;
+		model.m_filePath = filePath;
+		model.m_password = password;
+		model.save();
+		return model;
 	}
 	
 	public String getFilePath() {
@@ -57,6 +70,9 @@ public class LockerModel {
 		return m_password;
 	}
 
+	public LockerKeys getKeys() {
+		return m_keys;
+	}
 	
 	public List<Worksheet> getWorksheets() {
 		return m_worksheets;

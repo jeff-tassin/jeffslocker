@@ -226,5 +226,6 @@ public class StringUtils {
 	public static String safeTrim(String parameter) {
 		return parameter == null ? "" : parameter.trim();
 	}
+	
 
 }

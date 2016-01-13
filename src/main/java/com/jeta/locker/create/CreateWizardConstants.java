@@ -3,6 +3,7 @@ package com.jeta.locker.create;
 public class CreateWizardConstants {
 
 	// Generation Start
+	public static final String ID_ERROR = "error.msg";
 	public static final String ID_GENERATE_SALT = "generate.salt";  //javax.swing.JButton
 	public static final String ID_GENERATE_IV = "generate.iv";  //javax.swing.JButton
 	public static final String ID_SALT = "salt";  //javax.swing.JTextField
@@ -22,4 +23,5 @@ public class CreateWizardConstants {
 	public static final String ID_KEY_FILE = "key.file";  //javax.swing.JTextField
 	// Generation End
 
+	
 }

@@ -43,7 +43,7 @@ public class SSHKeyAccountsController  extends JETAController {
 		JSONObject json = acctsView.getSelectedAccount();
 		if ( json != null ) {
 			SSHKeyEditView editView = new SSHKeyEditView(json);
-			editView.setPreferredSize( new java.awt.Dimension(450,500));
+			editView.setPreferredSize( new java.awt.Dimension(500,350));
 			JETADialog dlg = JETAToolbox.invokeDialog( editView, null, "Edit Key", editView.getTextField(SSHKeyConstants.ID_DESCRIPTION) );
 			if (dlg.isOk()) {
 				json.put(SERVICE, editView.getText(SSHKeyConstants.ID_SERVICE) ); 
