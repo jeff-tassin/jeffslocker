@@ -13,7 +13,7 @@ import com.jeta.open.gui.framework.JETAController;
 
 public class CreditCardController extends JETAController {
 
-	public CreditCardController(CreditCardView view) {
+	public CreditCardController(CreditCardAccountsView view) {
 		super(view);
 		assignAction( CreditCardConstants.ID_ADD_ACCOUNT, evt -> addAccount() );
 		assignAction( CreditCardConstants.ID_SHOW_CC, evt-> showNumber() );
@@ -22,22 +22,22 @@ public class CreditCardController extends JETAController {
 	}
 	
 	public CreditCardTableModel getAccountsModel() {
-		CreditCardView view = (CreditCardView)getView();
+		CreditCardAccountsView view = (CreditCardAccountsView)getView();
 		JTable table = view.getTable( SSHKeyConstants.ID_KEY_TABLE );
 		return (CreditCardTableModel)table.getModel();
 	}
 	
 	
 	public void showNumber() {
-		CreditCardView view = (CreditCardView)getView();
+		CreditCardAccountsView view = (CreditCardAccountsView)getView();
 		view.showNumber( view.isSelected(CreditCardConstants.ID_SHOW_CC) );
 	}
 	public void showCVC() {
-		CreditCardView view = (CreditCardView)getView();
+		CreditCardAccountsView view = (CreditCardAccountsView)getView();
 		view.showCVC( view.isSelected(CreditCardConstants.ID_SHOW_CVC) );
 	}
 	public void showPin() {
-		CreditCardView view = (CreditCardView)getView();
+		CreditCardAccountsView view = (CreditCardAccountsView)getView();
 		view.showPin( view.isSelected(CreditCardConstants.ID_SHOW_PIN) );
 	}
 	

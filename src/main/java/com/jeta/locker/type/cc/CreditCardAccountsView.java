@@ -30,7 +30,7 @@ import com.jeta.locker.view.LockerTableCellRenderer;
 import com.jeta.open.gui.framework.JETAPanel;
 
 
-public class CreditCardView extends AbstractWorksheetView {
+public class CreditCardAccountsView extends AbstractWorksheetView {
  
 	private CreditCardTableModel m_model;
 	private JTable m_table;
@@ -38,7 +38,7 @@ public class CreditCardView extends AbstractWorksheetView {
 	private boolean m_showCVC = false;
 	private boolean m_showPin = false;
  
-    public CreditCardView( CreditCardTableModel model ) {
+    public CreditCardAccountsView( CreditCardTableModel model ) {
         super(model);
         setLayout(new BorderLayout());
          add( new FormPanel( "creditCardAccounts.jfrm"), BorderLayout.CENTER );
@@ -71,10 +71,10 @@ public class CreditCardView extends AbstractWorksheetView {
         
     private class CreditCardRenderer extends LockerTableCellRenderer {
         private String formatValue(Object value, boolean show) {
-        	if ( !show ) {
+        	String sval = value == null ? "" : String.valueOf( value );
+        	if ( !show && sval.length() > 0 ) {
         		return "*******************";
         	}
-        	String sval = String.valueOf(value);
         	if ( sval.length() == 16 ){
         		// visa
         		return sval.substring(0, 4) + "  " + sval.substring(4, 8) + "  " + sval.substring(8, 12) + "  " + sval.substring(12, 16);

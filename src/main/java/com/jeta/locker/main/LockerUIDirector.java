@@ -21,14 +21,14 @@ public class LockerUIDirector implements UIDirector {
 	 * Updates the components in the view
 	 */
 	public void updateComponents(java.util.EventObject evt) {
-		LockerModel model = m_view.getModel();
-		if ( model == null ) {
+		LockerModel locker = m_view.getModel();
+		if ( locker == null ) {
 			m_view.enableComponent( ID_ADD_WORKSHEET, false );
 			m_view.enableComponent( ID_EDIT_WORKSHEET, false );
 			m_view.enableComponent( ID_DELETE_WORKSHEET, false );
 			m_view.enableComponent( ID_SAVE_WORKSHEET, false );
 		} else {
-			m_view.enableComponent( LockerViewConstants.ID_SAVE_WORKSHEET, model.isModified() );
+			m_view.enableComponent( LockerViewConstants.ID_SAVE_WORKSHEET, locker.isModified() );
 		}
 	}
 }

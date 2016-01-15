@@ -12,6 +12,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 
 import org.json.JSONObject;
 
@@ -36,8 +38,11 @@ public abstract class AbstractWorksheetView extends JETAPanel {
 	protected void initializeTable(JTable table ) {
 		table.setFillsViewportHeight(true);
         table.setAutoCreateRowSorter(true);
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        table.setCellSelectionEnabled(true);
+        
+        //table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        
+       // table.setCellSelectionEnabled(true);
         table.setRowHeight(26);
         table.setGridColor( new Color(225,225,225) );
         Font font = table.getFont();
@@ -61,6 +66,25 @@ public abstract class AbstractWorksheetView extends JETAPanel {
 				Clipboard clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
 				clpbrd.setContents(stringSelection, null);
 			}
+		});
+		
+		menu.addPopupMenuListener( new PopupMenuListener() {
+
+			@Override
+			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+				JTable table = (JTable)menu.getInvoker();
+				int col = table.convertColumnIndexToModel(table.getSelectedColumn());
+				copy.setText("Copy " + m_model.getColumnName(col) );
+			}
+
+			@Override
+			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+			}
+
+			@Override
+			public void popupMenuCanceled(PopupMenuEvent e) {
+			}
+			
 		});
 		return menu;
 	}

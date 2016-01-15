@@ -163,20 +163,24 @@ public class AuthenticateView extends JETAPanel {
 		}
         @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-            if ( m_lockIcon != null ) {
-            	this.setIcon(m_lockIcon);
-            }
-            File file = (File)value;
-            if ( file != null ) {
-            	String fname = file.getName();
-            	int pos = fname.lastIndexOf('.');
-            	if ( pos > 0 ) {
-            		fname = fname.substring(0, pos);
-            	}
-            	setText( fname );
-            }
-            return this;
+        	super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        	if ( value == null ) {
+        		return this;
+        	} else {
+        		if ( m_lockIcon != null ) {
+        			this.setIcon(m_lockIcon);
+        		}
+        		File file = (File)value;
+        		if ( file != null ) {
+        			String fname = file.getName();
+        			int pos = fname.lastIndexOf('.');
+        			if ( pos > 0 ) {
+        				fname = fname.substring(0, pos);
+        			}
+        			setText( fname );
+        		}
+                return this;
+        	}
         }
     }
 

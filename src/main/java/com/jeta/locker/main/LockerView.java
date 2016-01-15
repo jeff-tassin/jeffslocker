@@ -27,11 +27,12 @@ import javax.swing.event.TableModelEvent;
 import com.jeta.forms.components.panel.FormPanel;
 import com.jeta.locker.model.AbstractWorksheetModel;
 import com.jeta.locker.model.ImmutableTableEvent;
+import com.jeta.locker.tabs.DndTabbedPane;
 import com.jeta.locker.type.cc.CreditCardTableModel;
-import com.jeta.locker.type.cc.CreditCardView;
+import com.jeta.locker.type.cc.CreditCardAccountsView;
 import com.jeta.locker.type.key.SSHKeyTableModel;
 import com.jeta.locker.type.key.SSHKeyAccountsView;
-import com.jeta.locker.type.password.PasswordView;
+import com.jeta.locker.type.password.PasswordAccountsView;
 import com.jeta.locker.view.AbstractWorksheetView;
 import com.jeta.open.gui.framework.JETAPanel;
 import com.jeta.locker.type.password.PasswordTableModel;
@@ -58,7 +59,8 @@ public class LockerView extends JETAPanel {
         m_infoLabel = new JLabel("No worksheets");
         m_infoLabel.setBorder( BorderFactory.createEmptyBorder( 10, 10, 10, 10));
         
-        m_tabs = new JTabbedPane();
+        //m_tabs = new JTabbedPane();
+        m_tabs = new DndTabbedPane();
         TabTitleEditListener listener = new TabTitleEditListener(m_tabs);
         m_tabs.addChangeListener(listener);
         m_tabs.addMouseListener(listener);
@@ -104,11 +106,11 @@ public class LockerView extends JETAPanel {
     public void addTab( Worksheet worksheet ) {
     	if ( worksheet.getType() == PASSWORD_TYPE ) {
     		PasswordTableModel model = new PasswordTableModel( worksheet );
-    		m_tabs.add( worksheet.getName(), new PasswordView( model ) );
+    		m_tabs.add( worksheet.getName(), new PasswordAccountsView( model ) );
     		model.addTableModelListener( evt -> { tableChanged(evt); } );
     	} else if ( worksheet.getType() == CREDIT_CARD_TYPE ) {
     		CreditCardTableModel model = new CreditCardTableModel( worksheet );
-    		m_tabs.add( worksheet.getName(), new CreditCardView( model ) );
+    		m_tabs.add( worksheet.getName(), new CreditCardAccountsView( model ) );
     		model.addTableModelListener( evt -> { tableChanged(evt); } );
     	} else if( worksheet.getType() == KEY_TYPE ) {
     		SSHKeyTableModel model = new SSHKeyTableModel( worksheet );

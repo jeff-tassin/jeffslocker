@@ -1,6 +1,5 @@
 package com.jeta.locker.model;
 
-
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
@@ -8,17 +7,51 @@ import javax.swing.table.AbstractTableModel;
 import org.json.JSONObject;
 
 import com.jeta.locker.common.LockerConstants;
+import com.jeta.locker.common.StringUtils;
 import com.jeta.locker.main.Worksheet;
 
 public abstract class AbstractWorksheetModel extends AbstractTableModel {
     
     private Worksheet m_worksheet = null;
     private String[]  m_columnNames;
+    private String[]  m_columnKeys;
     
-    public AbstractWorksheetModel( Worksheet worksheet, String[] colNames ) {
+    public AbstractWorksheetModel( Worksheet worksheet, String[] colNames, String[] colKeys ) {
     	m_worksheet = worksheet;
     	m_columnNames = colNames;
+    	m_columnKeys = colKeys;
     }
+
+    public Object getValueAt(int row, int col) {
+    	List<JSONObject> passwds = getWorksheet().getEntries();
+        JSONObject data = passwds.get(row);
+        if ( data == null ) {
+        	return "";
+        }
+        if ( col >= 0 && col < m_columnKeys.length ) {
+        	return data.optString( m_columnKeys[col] );
+        } else {
+        	return "";
+        }
+    }
+    
+    public void setValueAt(Object value, int row, int col) {
+    	List<JSONObject> passwds = getWorksheet().getEntries();
+        JSONObject data = passwds.get(row);
+        if ( data == null ) {
+        	return;
+        }
+        String sval = StringUtils.safeTrim( value == null ? "" : value.toString() );
+        if ( col >= 0 && col < m_columnKeys.length ) {
+        	String currentVal = data.optString(m_columnKeys[col]);
+        	if ( !sval.equals( currentVal ) ) {
+        		data.put( m_columnKeys[col], sval );
+                setModified(true);
+                fireTableCellUpdated(row, col);
+        	}
+        }
+     }
+    
 
     public void addRow( JSONObject acct ) {
     	m_worksheet.addEntry( acct );
@@ -73,4 +106,12 @@ public abstract class AbstractWorksheetModel extends AbstractTableModel {
     public boolean isCellEditable(int row, int col) {
     	return true;
     }
+    
+
+	public void setModified(boolean modified) {
+		m_worksheet.setModified(modified);
+		fireTableDataChanged();
+	}
+    
+   
 }

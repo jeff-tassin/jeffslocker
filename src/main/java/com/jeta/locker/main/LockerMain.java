@@ -14,7 +14,7 @@ import com.jeta.open.gui.utils.JETAToolbox;
 public class LockerMain {
 	private AuthenticateView m_loginBarrier;
 	private LockerView       m_view;
-	private JFrame m_frame;
+	private static JFrame m_frame;
 	
 	
 	public LockerMain() throws LockerException {
@@ -50,6 +50,9 @@ public class LockerMain {
 		m_loginBarrier.setFocus();
 	}
 	
+	public static JFrame getFrame() {
+		return m_frame;
+	}
 	public void openLocker( LockerModel model ) {
 		if ( m_loginBarrier != null ) {
 			m_frame.getContentPane().removeAll();
@@ -80,12 +83,12 @@ public class LockerMain {
 		@Override
 		public void windowClosing(WindowEvent evt) {
 			if ( m_view != null && m_view.getModel().isModified() ) {
-				int result = JOptionPane.showConfirmDialog(null,"Locker data has changed. Save to database?", "Confirm", JOptionPane.YES_NO_OPTION);
+				int result = JOptionPane.showConfirmDialog( LockerMain.getFrame(),"Locker data has changed. Save to database?", "Confirm", JOptionPane.YES_NO_OPTION);
 				if ( result == JOptionPane.YES_OPTION ) {
 					try {
 						m_view.getModel().save();
 					} catch( Exception e ) {
-						JOptionPane.showMessageDialog(null,  "Error: " + e.getLocalizedMessage());
+						JOptionPane.showMessageDialog( LockerMain.getFrame(),  "Error: " + e.getLocalizedMessage());
 					}
 				}
 			}

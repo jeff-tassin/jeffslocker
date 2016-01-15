@@ -65,6 +65,10 @@ public class AppProperties {
 				m_properties.put( propname, "" );
 			}
 		}
+		save();
+	}
+	
+	public static void save() {
 		OutputStream fos = null;
 		try {
 			fos = new FileOutputStream(getPropertiesFile());
@@ -101,6 +105,12 @@ public class AppProperties {
 		return StringUtils.safeParseInt(getProperty(key), defaultValue);
 	}
 	
+	public static void setProperty( String key, String value ) {
+		m_properties.put( key, value );
+	}
+	public static void setProperty( String key, int ival ) {
+		m_properties.put( key, String.valueOf(ival));
+	}
 	
 		
 	/**

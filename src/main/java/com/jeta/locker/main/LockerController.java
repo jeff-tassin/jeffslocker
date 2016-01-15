@@ -12,6 +12,8 @@ import javax.swing.JTabbedPane;
 
 import com.jeta.forms.components.panel.FormPanel;
 import com.jeta.locker.common.LockerUtils;
+import com.jeta.locker.preferences.BackupView;
+import com.jeta.locker.preferences.PreferencesDialog;
 import com.jeta.open.gui.framework.JETAController;
 import com.jeta.open.gui.framework.JETADialog;
 import com.jeta.open.gui.utils.JETAToolbox;
@@ -24,6 +26,7 @@ public class LockerController extends JETAController {
 		assignAction( LockerViewConstants.ID_SAVE_WORKSHEET, evt -> saveLocker() );
 		assignAction( LockerViewConstants.ID_ADD_WORKSHEET, evt -> addWorksheet() );
 		assignAction( LockerViewConstants.ID_CLOSE_WORKSHEET, evt -> closeWorksheet() );
+		assignAction( LockerViewConstants.ID_PREFERENCES, evt->openPreferences() );
 	}
 	
 	public void aboutLocker() {
@@ -45,7 +48,7 @@ public class LockerController extends JETAController {
 		try {
 			getModel().save();
 		} catch( Exception e ) {
-			JOptionPane.showMessageDialog(null,  "Error: " + e.getLocalizedMessage());
+			JOptionPane.showMessageDialog( LockerMain.getFrame(),  "Error: " + e.getLocalizedMessage());
 		}
 	}
 
@@ -65,7 +68,7 @@ public class LockerController extends JETAController {
 	public void closeWorksheet() {
 		LockerModel model = getModel();
 		if ( model !=null && model.isModified() ) {
-			int result = JOptionPane.showConfirmDialog(null,"Locker data has changed. Save to database?", "Confirm", JOptionPane.YES_NO_OPTION);
+			int result = JOptionPane.showConfirmDialog( LockerMain.getFrame(),"Locker data has changed. Save to database?", "Confirm", JOptionPane.YES_NO_OPTION);
 			if ( result == JOptionPane.YES_OPTION ) {
 				try {
 					model.save();
@@ -77,6 +80,10 @@ public class LockerController extends JETAController {
 		((LockerView)getView()).getMain().showLoginBarrier();
 	}
 		
+	public void openPreferences() {
+		PreferencesDialog dlg = new PreferencesDialog( LockerMain.getFrame() );
+		dlg.showCenter();
+	}
 	
 	// Generation Start
 	public static final String ID_PASSWORD = "password";  //javax.swing.JRadioButton
@@ -85,7 +92,7 @@ public class LockerController extends JETAController {
 	private int invokeWorksheetDialog() {
 		FormPanel form = new FormPanel( "newWorksheet.jfrm" );
 		form.setPreferredSize(new Dimension(300,180));
-		JETADialog dlg = JETAToolbox.invokeDialog( form,  null, "New Worksheet");
+		JETADialog dlg = JETAToolbox.invokeDialog( form,  LockerMain.getFrame(), "New Worksheet");
 		if ( dlg.isOk() ) {
 			if ( form.isSelected(ID_PASSWORD)) {
 				return PASSWORD_TYPE;

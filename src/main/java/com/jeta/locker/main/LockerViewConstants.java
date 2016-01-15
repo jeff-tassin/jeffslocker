@@ -9,6 +9,7 @@ public class LockerViewConstants {
 	public static final String ID_SAVE_WORKSHEET = "save.worksheet";
 	public static final String ID_CLOSE_WORKSHEET = "close.worksheet";
 	public static final String ID_DATA_FILE = "data.file";
+	public static final String ID_PREFERENCES = "preferences";
 	
 	public static final String ID_WORKSHEETS_PANEL = "worksheets.panel"; // javax.swing.JPanel
 	// Generation End

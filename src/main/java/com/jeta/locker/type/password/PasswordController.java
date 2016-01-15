@@ -34,7 +34,7 @@ import com.jeta.open.gui.utils.JETAToolbox;
 
 public class PasswordController  extends JETAController {
 
-	public PasswordController(PasswordView view) {
+	public PasswordController(PasswordAccountsView view) {
 		super(view);
 		assignAction( PasswordConstants.ID_GENERATE_PASSWORD, evt -> generatePassword() );
 		assignAction( PasswordConstants.ID_ADD_ACCOUNT, evt -> addPasswordAccount() );
@@ -48,33 +48,31 @@ public class PasswordController  extends JETAController {
 	}
 	
 	public PasswordTableModel getAccountsModel() {
-		PasswordView view = (PasswordView)getView();
+		PasswordAccountsView view = (PasswordAccountsView)getView();
 		JTable table = view.getTable( SSHKeyConstants.ID_KEY_TABLE );
 		return (PasswordTableModel)table.getModel();
 	}
 	
 	
 	public void editAccount() {
-		PasswordView view = (PasswordView)getView();
+		PasswordAccountsView view = (PasswordAccountsView)getView();
 		JSONObject json = view.getSelectedAccount();
 		if ( json != null ) {
 			PasswordEditView editView = new PasswordEditView(json);
 			editView.setPreferredSize( new java.awt.Dimension(500,350));
 			JETADialog dlg = JETAToolbox.invokeDialog( editView, null, "Edit Password Account", null );
 			if (dlg.isOk()) {
-				/*
-				json.put(LockerConstants.SERVICE), editView.getText( ID_SERVICE_NAME ) );
-				json.put(LockerConstants.USER_NAME), editView.getText( ID_USER_NAME ) );
-			  	json.put(LockerConstants.PASSWORD), editView.getText( ID_PASSWORD ) ); 
-			  	json.put(LockerConstants.DESCRIPTION) ), editVie.getText( ID_DESCRIPTION )); 
-				getAccountsModel().fireTableDataChanged();
-				*/
+				json.put(LockerConstants.SERVICE, editView.getText( ID_SERVICE_NAME ) );
+				json.put(LockerConstants.USER_NAME, editView.getText( ID_USER_NAME ) );
+			  	json.put(LockerConstants.PASSWORD, editView.getText( ID_PASSWORD ) ); 
+			  	json.put(LockerConstants.DESCRIPTION, editView.getText( ID_DESCRIPTION )); 
+				getAccountsModel().setModified(true);
 			}
 		}
 	}
 	
 	public void showPasswords() {
-		PasswordView view = (PasswordView)getView();
+		PasswordAccountsView view = (PasswordAccountsView)getView();
 		view.showPasswords( view.isSelected( PasswordConstants.ID_SHOW_PASSWORDS ));
 	}
 	

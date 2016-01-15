@@ -9,12 +9,12 @@ public class PasswordUIDirector implements UIDirector {
 	/**
 	 * The view we are updating.
 	 */
-	private PasswordView  m_view; 
+	private PasswordAccountsView  m_view; 
 
 	/**
 	 * ctor
 	 */
-	public PasswordUIDirector(PasswordView view) {
+	public PasswordUIDirector(PasswordAccountsView view) {
 		m_view = view;
 	}
 

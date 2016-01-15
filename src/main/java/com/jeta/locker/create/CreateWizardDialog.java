@@ -40,7 +40,6 @@ public class CreateWizardDialog extends JETADialog {
 	private static final int VIEW_2 = 2;
 	private int m_state = 0;
 	private String m_id;
-	
 	private JButton m_finishBtn;
 	
 
@@ -52,7 +51,7 @@ public class CreateWizardDialog extends JETADialog {
 		
 		m_view2.getCheckBox( ID_CONFIRM ).addActionListener( evt-> confirmFinish() );
 
-		setSize( new Dimension(750,550));
+		setSize( new Dimension(750,570));
 		setTitle( "Create Locker" );
 
 		JPanel btnPanel = getButtonPanel();
@@ -125,8 +124,8 @@ public class CreateWizardDialog extends JETADialog {
 			/**
 			 * hack to fix Swing dialog issue not repainting when child views change
 			 */
-			setSize( new Dimension(750,551));
-			setSize( new Dimension(750,550));
+			setSize( getWidth(), getHeight() + 1 );
+			setSize( getWidth(), getHeight() - 1 );
 			m_container.repaint();
 			
 			m_finishBtn.setEnabled(false);
@@ -149,8 +148,8 @@ public class CreateWizardDialog extends JETADialog {
 			/**
 			 * hack to fix Swing dialog issue not repainting when child views change
 			 */
-			setSize( new Dimension(750,551));
-			setSize( new Dimension(750,550));
+			setSize( getWidth(), getHeight() + 1 );
+			setSize( getWidth(), getHeight() - 1 );
 			m_container.repaint();
 
 			

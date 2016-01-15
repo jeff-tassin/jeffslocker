@@ -22,6 +22,7 @@ public class CreateWizardConstants {
 	public static final String ID_CONFIRM = "confirm";  //javax.swing.JCheckBox
 	public static final String ID_KEY_FILE = "key.file";  //javax.swing.JTextField
 	// Generation End
+	public static final String ID_INFO_MESSAGE = "info.message";
 
 	
 }

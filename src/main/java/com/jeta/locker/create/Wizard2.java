@@ -13,6 +13,7 @@ public class Wizard2 extends JETAPanel {
 	public Wizard2() {
 		setLayout( new BorderLayout() );
 		add( new FormPanel( "wizard2.jfrm" ), BorderLayout.CENTER );
+		getTextArea( ID_INFO_MESSAGE ).setBackground( getBackground() );
 		setErrorMessage("");
 	}
 	
