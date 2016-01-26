@@ -144,7 +144,7 @@ public class Wizard1 extends JETAPanel {
 
 		public void chooseFile() {
 			 JFileChooser chooser = new JFileChooser();
-			 int returnVal = chooser.showOpenDialog( m_view1 );
+			 int returnVal = chooser.showSaveDialog( m_view1 );
 			 if(returnVal == JFileChooser.APPROVE_OPTION) {
 				 File lockerFile = chooser.getSelectedFile();
 				 String filePath = lockerFile.getAbsolutePath();

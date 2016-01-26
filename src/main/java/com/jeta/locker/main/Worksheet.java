@@ -1,11 +1,15 @@
 package com.jeta.locker.main;
 
-import static com.jeta.locker.common.LockerConstants.*; 
+import static com.jeta.locker.common.LockerConstants.*;
 
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -21,6 +25,10 @@ public class Worksheet {
 	private List<JSONObject>  m_accounts = new ArrayList<JSONObject>();
 	private boolean m_modified = false;
 	
+	/**
+	 * A list of listeners that get notified when worksheet is modified 
+	 */
+	private List<ChangeListener>  m_listeners = new ArrayList<ChangeListener>();
 	
 	public Worksheet(String id, String name, int type) {
 		m_id = id;
@@ -47,6 +55,7 @@ public class Worksheet {
 	
 	public void setModified(boolean modified) {
 		m_modified = modified;
+		notifyListeners(new ChangeEvent(this));
 	}
 	
 	public boolean isModified() {
@@ -74,11 +83,23 @@ public class Worksheet {
 		setModified(true);
 	}
 
-	
 	public List<JSONObject> getEntries() {
 		return Collections.unmodifiableList(m_accounts);
 	}
 	
+	public void addListener(ChangeListener listener) {
+		m_listeners.add(listener);
+	}
+	
+	public void notifyListeners(ChangeEvent evt) {
+		for( ChangeListener listener : m_listeners ) {
+			listener.stateChanged(evt);
+		}
+	}
+	public void removeListener(ChangeListener listener) {
+		m_listeners.remove(listener);
+	}
+
 	public JSONObject toJSON() {
 		JSONObject json = new JSONObject();
 		json.put( ID, m_id );

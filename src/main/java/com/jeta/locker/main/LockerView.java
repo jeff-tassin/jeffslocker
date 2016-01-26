@@ -22,12 +22,8 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.TableModelEvent;
 
 import com.jeta.forms.components.panel.FormPanel;
-import com.jeta.locker.model.AbstractWorksheetModel;
-import com.jeta.locker.model.ImmutableTableEvent;
-import com.jeta.locker.tabs.DndTabbedPane;
 import com.jeta.locker.type.cc.CreditCardTableModel;
 import com.jeta.locker.type.cc.CreditCardAccountsView;
 import com.jeta.locker.type.key.SSHKeyTableModel;
@@ -60,7 +56,7 @@ public class LockerView extends JETAPanel {
         m_infoLabel.setBorder( BorderFactory.createEmptyBorder( 10, 10, 10, 10));
         
         //m_tabs = new JTabbedPane();
-        m_tabs = new DndTabbedPane();
+        m_tabs = new JTabbedPane();
         TabTitleEditListener listener = new TabTitleEditListener(m_tabs);
         m_tabs.addChangeListener(listener);
         m_tabs.addMouseListener(listener);
@@ -70,15 +66,18 @@ public class LockerView extends JETAPanel {
         setText( LockerViewConstants.ID_DATA_FILE, "File: " + model.getFilePath() );
         setController( new LockerController(this) );
         setUIDirector( new LockerUIDirector(this) );
-        
         configureView();
-        updateComponents(null);
     }
     
 	public JTabbedPane getTabs() {
 		return m_tabs;
 	}
 
+	public AbstractWorksheetView getCurrentView() {
+		int index = m_tabs.getSelectedIndex();
+		return  index >=0 ? (AbstractWorksheetView)m_tabs.getComponentAt(index) : null;
+	}
+	
     private void configureView() {
     	if ( m_tabs.getTabCount() == 0 ) {
     		if ( m_sheetsPanel.getComponentCount() == 0 || m_sheetsPanel.getComponent(0) != m_infoLabel ) {
@@ -107,25 +106,20 @@ public class LockerView extends JETAPanel {
     	if ( worksheet.getType() == PASSWORD_TYPE ) {
     		PasswordTableModel model = new PasswordTableModel( worksheet );
     		m_tabs.add( worksheet.getName(), new PasswordAccountsView( model ) );
-    		model.addTableModelListener( evt -> { tableChanged(evt); } );
+    		model.addTableModelListener( evt -> updateComponents(null) );
     	} else if ( worksheet.getType() == CREDIT_CARD_TYPE ) {
     		CreditCardTableModel model = new CreditCardTableModel( worksheet );
     		m_tabs.add( worksheet.getName(), new CreditCardAccountsView( model ) );
-    		model.addTableModelListener( evt -> { tableChanged(evt); } );
+    		model.addTableModelListener( evt -> updateComponents(null) );
     	} else if( worksheet.getType() == KEY_TYPE ) {
     		SSHKeyTableModel model = new SSHKeyTableModel( worksheet );
     		m_tabs.add( worksheet.getName(), new SSHKeyAccountsView( model ) );
-    		model.addTableModelListener( evt -> { tableChanged(evt); } );
+    		model.addTableModelListener( evt -> updateComponents(null));
     	}
+    	worksheet.addListener( evt-> updateComponents(null) );
     	configureView();
     }
-    
-    private void tableChanged(TableModelEvent evt) {
-    	if ( !(evt instanceof ImmutableTableEvent) ) {
-    		updateComponents(null);
-    	}
-    }
-     
+
     private Worksheet getWorksheetAt( int tabIndex ) {
     	Object lview = m_tabs.getComponentAt( tabIndex );
     	if ( lview instanceof AbstractWorksheetView ) {
@@ -215,11 +209,13 @@ public class LockerView extends JETAPanel {
                 worksheet.setName(title);
             }
             cancelEditing();
+            LockerView.this.updateComponents(null);
         }
 
 		@Override
 		public void stateChanged(ChangeEvent e) {
 			renameTabTitle();
+			
 		}
     }
 }

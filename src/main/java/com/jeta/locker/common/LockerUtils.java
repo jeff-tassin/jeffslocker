@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public class LockerUtils {
 	
-	private static String CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	private static String CHARS = "123456789ABCDEFGHIJKLMNPQRSTUVWXYZabcdefghijklmnpqrstuvwxyz";
 	private static String SYMBOLS_AND_CHARS = "{|}~!#$%&()*+,-.:;<=>?@[]^_" + CHARS;
 			
 	public static String generateId() {
@@ -41,5 +41,7 @@ public class LockerUtils {
 	public static boolean isDebug() {
 		return "true".equals(System.getProperty("locker.debug"));
 	}
+	
+	
 	
 }

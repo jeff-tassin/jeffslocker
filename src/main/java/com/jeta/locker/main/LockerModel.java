@@ -115,22 +115,6 @@ public class LockerModel {
 
 	public void save() throws LockerException {
 		try {
-			//String configFile = StringUtils.buildFilePath( LockerConfig.getDataDirectory(), "locker.data" );
-	
-			/**
-			 * first make a backup
-			 */
-			/*
-			SimpleDateFormat format = new SimpleDateFormat("MMM_d_yyyy_HH_mm_ss");
-			String backupFile = "locker.backup." + format.format( new Date() );
-			String backupPath = StringUtils.buildFilePath( LockerConfig.getDataDirectory(), backupFile );
-			
-			Files.copy( new File(configFile).toPath(), new File(backupPath).toPath(), StandardCopyOption.COPY_ATTRIBUTES);
-			*/
-			/**
-			 * now write data file
-			 */
-
 			JSONObject json = new JSONObject();
 			JSONArray passwords = new JSONArray();
 			for( Worksheet sheet : m_worksheets ) {

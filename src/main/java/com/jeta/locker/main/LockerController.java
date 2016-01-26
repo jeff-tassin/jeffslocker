@@ -14,6 +14,7 @@ import com.jeta.forms.components.panel.FormPanel;
 import com.jeta.locker.common.LockerUtils;
 import com.jeta.locker.preferences.BackupView;
 import com.jeta.locker.preferences.PreferencesDialog;
+import com.jeta.locker.worksheets.EditWorksheetsDialog;
 import com.jeta.open.gui.framework.JETAController;
 import com.jeta.open.gui.framework.JETADialog;
 import com.jeta.open.gui.utils.JETAToolbox;
@@ -27,6 +28,8 @@ public class LockerController extends JETAController {
 		assignAction( LockerViewConstants.ID_ADD_WORKSHEET, evt -> addWorksheet() );
 		assignAction( LockerViewConstants.ID_CLOSE_WORKSHEET, evt -> closeWorksheet() );
 		assignAction( LockerViewConstants.ID_PREFERENCES, evt->openPreferences() );
+		assignAction( LockerViewConstants.ID_EDIT_WORKSHEETS, evt->editWorksheets() );
+		
 	}
 	
 	public void aboutLocker() {
@@ -79,6 +82,15 @@ public class LockerController extends JETAController {
 		}
 		((LockerView)getView()).getMain().showLoginBarrier();
 	}
+	
+	public void editWorksheets() {
+		//LockerView view = (LockerView)getView();
+		//JTabbedPane tabs = view.getTabs();
+	
+		EditWorksheetsDialog dlg = new EditWorksheetsDialog();
+		dlg.showCenter();
+	}
+
 		
 	public void openPreferences() {
 		PreferencesDialog dlg = new PreferencesDialog( LockerMain.getFrame() );

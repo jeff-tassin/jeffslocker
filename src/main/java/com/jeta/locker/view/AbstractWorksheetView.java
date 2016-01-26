@@ -7,6 +7,8 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -49,7 +51,11 @@ public abstract class AbstractWorksheetView extends JETAPanel {
         if (font.getSize() < 14 ) {
         	table.setFont( new Font( font.getFamily(), Font.PLAIN, 14 ) );
         }
-
+        table.addMouseListener( new MouseAdapter() {
+        	public void mouseClicked(MouseEvent evt ) {
+        		updateComponents(null);
+        	}
+        });
 	}
 	public JPopupMenu createContextMenu() {
 		JMenuItem copy = new JMenuItem("Copy");
@@ -98,5 +104,12 @@ public abstract class AbstractWorksheetView extends JETAPanel {
 		return row >=0 ? m_model.getAccount(row) : null;
 	}
 	public abstract JTable getTable();
+
+	public void stopEditing() {
+		JTable table = getTable();
+		if (table.isEditing()) {
+			table.getCellEditor().stopCellEditing();
+		}
+	}
 	    
 }

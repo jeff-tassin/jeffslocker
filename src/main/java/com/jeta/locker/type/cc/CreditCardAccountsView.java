@@ -23,7 +23,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import com.jeta.forms.components.panel.FormPanel;
 import com.jeta.locker.main.Worksheet;
-import com.jeta.locker.model.ImmutableTableEvent;
 import com.jeta.locker.type.password.PasswordConstants;
 import com.jeta.locker.view.AbstractWorksheetView;
 import com.jeta.locker.view.LockerTableCellRenderer;
@@ -58,15 +57,15 @@ public class CreditCardAccountsView extends AbstractWorksheetView {
     
     public void showNumber( boolean show ) {
     	m_showNumber = show;
-    	m_model.fireTableChanged( new ImmutableTableEvent(getModel()) );
+    	m_model.fireTableDataChanged();
     }
     public void showCVC( boolean show ) {
     	m_showCVC = show;
-    	m_model.fireTableChanged( new ImmutableTableEvent(getModel()) );
+    	m_model.fireTableDataChanged();
     }
     public void showPin( boolean show ) {
     	m_showPin = show;
-    	m_model.fireTableChanged( new ImmutableTableEvent(getModel()) );
+    	m_model.fireTableDataChanged();
     }
         
     private class CreditCardRenderer extends LockerTableCellRenderer {

@@ -24,5 +24,6 @@ public class PasswordUIDirector implements UIDirector {
 	public void updateComponents(java.util.EventObject evt) {
 		JSONObject json = m_view.getSelectedAccount();
 		m_view.enableComponent( PasswordConstants.ID_DELETE_ACCOUNT, json != null );
+		m_view.enableComponent( PasswordConstants.ID_EDIT_ACCOUNT, json != null );
 	}
 }

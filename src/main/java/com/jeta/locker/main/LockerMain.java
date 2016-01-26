@@ -9,11 +9,12 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import com.jeta.locker.common.LockerException;
 import com.jeta.locker.common.StringUtils;
+import com.jeta.locker.view.AbstractWorksheetView;
 import com.jeta.open.gui.utils.JETAToolbox;
 
 public class LockerMain {
 	private AuthenticateView m_loginBarrier;
-	private LockerView       m_view;
+	private static LockerView       m_view;
 	private static JFrame m_frame;
 	
 	
@@ -53,6 +54,11 @@ public class LockerMain {
 	public static JFrame getFrame() {
 		return m_frame;
 	}
+	
+	public static LockerModel getCurrentModel() {
+		return m_view.getModel();
+	}
+	
 	public void openLocker( LockerModel model ) {
 		if ( m_loginBarrier != null ) {
 			m_frame.getContentPane().removeAll();
@@ -82,14 +88,30 @@ public class LockerMain {
 	private class WindowController extends WindowAdapter {
 		@Override
 		public void windowClosing(WindowEvent evt) {
-			if ( m_view != null && m_view.getModel().isModified() ) {
-				int result = JOptionPane.showConfirmDialog( LockerMain.getFrame(),"Locker data has changed. Save to database?", "Confirm", JOptionPane.YES_NO_OPTION);
-				if ( result == JOptionPane.YES_OPTION ) {
-					try {
-						m_view.getModel().save();
-					} catch( Exception e ) {
-						JOptionPane.showMessageDialog( LockerMain.getFrame(),  "Error: " + e.getLocalizedMessage());
+			if ( m_view != null ) {
+				AbstractWorksheetView view = m_view.getCurrentView();
+				if ( view != null ) {
+					view.stopEditing();
+				}
+				if ( m_view.getModel().isModified() ) {
+					int result = JOptionPane.showConfirmDialog( LockerMain.getFrame(),"Locker data has changed. Save to database?", "Confirm", JOptionPane.YES_NO_OPTION);
+					if ( result == JOptionPane.YES_OPTION ) {
+						try {
+							m_view.getModel().save();
+						} catch( Exception e ) {
+							JOptionPane.showMessageDialog( LockerMain.getFrame(),  "Error: " + e.getLocalizedMessage());
+						}
 					}
+				}
+			}
+		}
+		
+		@Override
+		public void windowDeactivated(WindowEvent e) {
+			if ( m_view != null ) {
+				AbstractWorksheetView view = m_view.getCurrentView();
+				if ( view != null ) {
+					view.stopEditing();
 				}
 			}
 		}
