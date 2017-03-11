@@ -68,6 +68,10 @@ public abstract class AbstractWorksheetView extends JETAPanel {
 				int row = table.convertRowIndexToModel(table.getSelectedRow());
 				int col = table.convertColumnIndexToModel(table.getSelectedColumn());
 				String sval = String.valueOf(m_model.getValueAt(row, col));
+				
+				if ( m_model.getColumnName(col).contains("Card Number") ) {
+					sval = sval.replace(" ", "");
+				}
 				StringSelection stringSelection = new StringSelection(sval);
 				Clipboard clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
 				clpbrd.setContents(stringSelection, null);
