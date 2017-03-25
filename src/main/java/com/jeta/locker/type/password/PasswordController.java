@@ -25,7 +25,7 @@ import org.json.JSONObject;
 import com.jeta.forms.components.panel.FormPanel;
 import com.jeta.locker.common.LockerConstants;
 import com.jeta.locker.common.LockerUtils;
-
+import com.jeta.locker.common.LogUtils;
 import com.jeta.locker.type.key.SSHKeyConstants;
 
 import com.jeta.open.gui.framework.JETAController;
@@ -40,6 +40,7 @@ public class PasswordController  extends JETAController {
 		assignAction( PasswordConstants.ID_ADD_ACCOUNT, evt -> addPasswordAccount() );
 		assignAction( PasswordConstants.ID_SHOW_PASSWORDS, evt -> showPasswords() );
 		assignAction( PasswordConstants.ID_EDIT_ACCOUNT, evt-> editAccount() );
+		assignAction( PasswordConstants.ID_DELETE_ACCOUNT, evt-> deleteAccount() );
 		assignListener( PasswordConstants.ID_ACCOUNTS_TABLE, new ListSelectionListener() {
         	public void valueChanged(ListSelectionEvent e) {
         	//	uiChanged();
@@ -49,7 +50,7 @@ public class PasswordController  extends JETAController {
 	
 	public PasswordTableModel getAccountsModel() {
 		PasswordAccountsView view = (PasswordAccountsView)getView();
-		JTable table = view.getTable( SSHKeyConstants.ID_KEY_TABLE );
+		JTable table = view.getTable();
 		return (PasswordTableModel)table.getModel();
 	}
 	
@@ -92,6 +93,15 @@ public class PasswordController  extends JETAController {
 		}			
 	}
 	
+	public void deleteAccount() {
+		int result = JOptionPane.showConfirmDialog(null,"Delete selected account?", "Confirm", JOptionPane.YES_NO_OPTION);
+		if ( result == JOptionPane.YES_OPTION ) {
+			PasswordAccountsView view = (PasswordAccountsView)getView();
+			JTable table = view.getTable();
+			int row = table.convertRowIndexToModel( table.getSelectedRow() );
+			((PasswordTableModel)table.getModel()).deleteRow(row);
+		}
+	}
 	
 	public class AddAction implements ActionListener {
 		@Override
@@ -110,13 +120,5 @@ public class PasswordController  extends JETAController {
 		}
 	}
 	
-	public class DeleteAction implements ActionListener {
-		public void actionPerformed( ActionEvent evt ) {
-	 		int result = JOptionPane.showConfirmDialog(null,"Delete selected account?", "Confirm", JOptionPane.YES_NO_OPTION);
-			if ( result == JOptionPane.YES_OPTION ) {
-				//int row = m_table.convertRowIndexToModel( m_table.getSelectedRow() );
-				//m_model.deleteRow( row );
-			}
-		}
-	}
+	
 }

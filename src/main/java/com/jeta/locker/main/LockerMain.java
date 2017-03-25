@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import com.jeta.locker.common.LockerException;
+import com.jeta.locker.common.LogUtils;
 import com.jeta.locker.common.StringUtils;
 import com.jeta.locker.view.AbstractWorksheetView;
 import com.jeta.open.gui.utils.JETAToolbox;
@@ -79,6 +80,10 @@ public class LockerMain {
 
 	public static void main(String[] args ) {
 		try {
+			if ( args.length >= 2 ) {
+				LogUtils.debug( "args " + args[0] + "  " + args[1] );
+				LogUtils.debug( "dir: " + System.getProperty("user.dir"));
+			}
 			new LockerMain();
 		} catch( LockerException e ) {
 			JOptionPane.showMessageDialog(null,  "Error: " + e.getLocalizedMessage());
